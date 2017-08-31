@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+
+    <classPathEntry location="src/main/lib/mysql-connector-java-5.1.38.jar"/>
+
+    <!-- defaultModelType: conditional flat hierarchical -->
+    <!-- targetRuntime: MyBatis3 MyBatis3Simple Ibatis2Java2 Ibatis2Java5 -->
+    <context id="MysqlContext" targetRuntime="MyBatis3" defaultModelType="flat">
+
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <property name="javaFileEncoding" value="UTF-8"/>
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="false"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.1.199:3306/configx?rewriteBatchedStatements=true&amp;useUnicode=true&amp;characterEncoding=utf8"
+                        userId="root" password="test"/>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.configx.web.model" targetProject="src/main/java">
+            <property name="constructorBased" value="false"/>
+            <property name="enableSubPackages" value="false"/>
+            <property name="immutable" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="com.configx.web.dao" targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator targetPackage="com.configx.web.dao" targetProject="src/main/java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!--
+        <table tableName="app" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="env" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="profile" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="profile_group" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="tag" delimitIdentifiers="true"
+                enableInsert="true"
+                enableSelectByPrimaryKey="true"
+                enableUpdateByPrimaryKey="true"
+                enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                enableDeleteByExample="false"
+                enableUpdateByExample="false"
+                enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="config_item" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="config_value" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="config_item_history" delimitIdentifiers="true"
+                enableInsert="true"
+                enableSelectByPrimaryKey="true"
+                enableUpdateByPrimaryKey="true"
+                enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                enableDeleteByExample="false"
+                enableUpdateByExample="false"
+                enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+
+        <table tableName="config_commit" delimitIdentifiers="true"
+                enableInsert="true"
+                enableSelectByPrimaryKey="true"
+                enableUpdateByPrimaryKey="true"
+                enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                enableDeleteByExample="false"
+                enableUpdateByExample="false"
+                enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="revision" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="build" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="build_config_item" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="build_config_change" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+
+        <table tableName="release_form" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="release" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+        </table>
+
+        <table tableName="release_version" delimitIdentifiers="true"
+                 enableInsert="true"
+                 enableSelectByPrimaryKey="true"
+                 enableUpdateByPrimaryKey="true"
+                 enableDeleteByPrimaryKey="true"
+                enableSelectByExample="false"
+                 enableDeleteByExample="false"
+                 enableUpdateByExample="false"
+                 enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="number" sqlStatement="JDBC"/>
+        </table>
+
+        <table tableName="session" delimitIdentifiers="true"
+               enableInsert="true"
+               enableSelectByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true"
+               enableSelectByExample="false"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+-->
+
+        <!--<table tableName="app" delimitIdentifiers="true"-->
+        <!--enableInsert="true"-->
+        <!--enableSelectByPrimaryKey="true"-->
+        <!--enableUpdateByPrimaryKey="true"-->
+        <!--enableDeleteByPrimaryKey="true"-->
+        <!--enableSelectByExample="false"-->
+        <!--enableDeleteByExample="false"-->
+        <!--enableUpdateByExample="false"-->
+        <!--enableCountByExample="false">-->
+        <!--<property name="useActualColumnNames" value="false"/>-->
+        <!--<generatedKey column="id" sqlStatement="JDBC"/>-->
+        <!--<ignoreColumn column="owner" />-->
+        <!--<ignoreColumn column="email" />-->
+        <!--<ignoreColumn column="secret" />-->
+        <!--</table>-->
+
+        <table tableName="profile" delimitIdentifiers="true"
+               enableInsert="true"
+               enableSelectByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true"
+               enableSelectByExample="false"
+               enableDeleteByExample="false"
+               enableUpdateByExample="false"
+               enableCountByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+        </table>
+
+    </context>
+</generatorConfiguration>

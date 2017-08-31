@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--JMX管理-->
+    <jmxConfigurator/>
+
+    <!-- in the absence of the class attribute, assume ch.qos.logback.core.hook.DelayingShutdownHook -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+    <!-- 消除 jul-to-slf4j bridge的性能影响 -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>false</resetJUL>
+    </contextListener>
+
+    <!-- 自定义logger -->
+    <logger name="com.configx" level="INFO"/>
+
+</configuration>

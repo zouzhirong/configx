@@ -1,0 +1,11 @@
+#flex-container {
+    top: 30px !important;
+    margin-bottom: -30px;
+}
+
+#diff-header {
+	height: 30px;
+	line-height: 30px;
+	background-color: #efefef;
+	border: 1px solid #999999;
+}
