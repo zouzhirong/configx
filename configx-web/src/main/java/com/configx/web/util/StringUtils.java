@@ -1,4 +1,4 @@
-package com.configx.web;
+package com.configx.web.util;
 
 /**
  * Created by zouzhirong on 2017/8/31.

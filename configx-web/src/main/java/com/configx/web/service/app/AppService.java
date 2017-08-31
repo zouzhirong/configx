@@ -4,7 +4,7 @@
  */
 package com.configx.web.service.app;
 
-import com.configx.web.StringUtils;
+import com.configx.web.util.StringUtils;
 import com.configx.web.dao.AppMapper;
 import com.configx.web.model.App;
 import com.configx.web.service.user.UserContext;
