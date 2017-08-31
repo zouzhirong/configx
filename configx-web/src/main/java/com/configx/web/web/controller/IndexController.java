@@ -23,7 +23,11 @@ public class IndexController {
     @RequestMapping("/")
     public String index() {
         App app = appService.getDefaultApp(UserContext.email());
-        return "redirect:/apps/" + app.getId() + "/config";
+        if (app == null) {
+            return "redirect:/apps";
+        } else {
+            return "redirect:/apps/" + app.getId() + "/config";
+        }
     }
 
 }

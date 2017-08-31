@@ -4,11 +4,10 @@
  */
 package com.configx.web.web.controller;
 
-import com.configx.web.service.app.AppService;
-import com.configx.web.service.release.version.ReleaseVersionService;
 import com.configx.web.model.*;
 import com.configx.web.page.Page;
 import com.configx.web.page.PageRequest;
+import com.configx.web.service.app.AppService;
 import com.configx.web.service.app.EnvService;
 import com.configx.web.service.app.ProfileService;
 import com.configx.web.service.app.TagService;
@@ -17,6 +16,7 @@ import com.configx.web.service.config.ConfigSearchService;
 import com.configx.web.service.config.ConfigService;
 import com.configx.web.service.config.ConfigValueType;
 import com.configx.web.service.privilege.PrivilegeService;
+import com.configx.web.service.release.version.ReleaseVersionService;
 import com.configx.web.service.user.UserContext;
 import com.configx.web.web.dto.ConfigSearchForm;
 import com.configx.web.web.model.ConfigItemModel;
@@ -72,6 +72,10 @@ public class ConfigController {
     @RequestMapping(value = "/apps/{appId}/config")
     public ModelAndView getConfigList(@PathVariable("appId") int appId) {
         Env env = envService.getDefaultEnv(appId);
+        if (env == null) {
+            return new ModelAndView(new RedirectView("/apps/" + appId + "/envs/empty"));
+        }
+
         return new ModelAndView(new RedirectView("/apps/" + appId + "/config/" + env.getName()));
     }
 
@@ -100,8 +104,7 @@ public class ConfigController {
         }
 
         // 权限认证
-        if (app == null || env == null
-                || !privilegeService.isAppAdminOrDeveloper(form.getAppId(), UserContext.email())) {
+        if (!privilegeService.isAppAdminOrDeveloper(form.getAppId(), UserContext.email())) {
             return new ModelAndView(new RedirectView("/apps/empty"));
         }
 

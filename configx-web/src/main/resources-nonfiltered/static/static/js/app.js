@@ -25,8 +25,8 @@ $('#editAppModal').on('show.bs.modal', function (event) {
         modal.find('.modal-body p[name=app-id]').text(app.id);
         modal.find('.modal-body input[name=name]').val(app.name);
         modal.find('.modal-body textarea[name=description]').val(app.description);
-        modal.find('.modal-body input[name=admins]').val(app.admins);
-        modal.find('.modal-body input[name=developers]').val(app.developers);
+        modal.find('.modal-body textarea[name=admins]').val(app.admins);
+        modal.find('.modal-body textarea[name=developers]').val(app.developers);
     });
 })
 

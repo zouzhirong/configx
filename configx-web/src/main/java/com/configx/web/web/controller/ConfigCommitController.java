@@ -86,8 +86,7 @@ public class ConfigCommitController {
         form.setEnvId(env.getId());
 
         // 权限认证
-        if (app == null || env == null
-                || !privilegeService.isAppAdminOrDeveloper(form.getAppId(), UserContext.email())) {
+        if (!privilegeService.isAppAdminOrDeveloper(form.getAppId(), UserContext.email())) {
             return new ModelAndView(new RedirectView("/apps/empty"));
         }
 

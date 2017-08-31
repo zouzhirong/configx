@@ -11,6 +11,8 @@
         <resetJUL>false</resetJUL>
     </contextListener>
 
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
     <!-- 自定义logger -->
     <logger name="com.configx" level="INFO"/>
 

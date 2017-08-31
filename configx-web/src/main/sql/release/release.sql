@@ -15,14 +15,14 @@ CREATE TABLE `release` (
   `release_ip` varchar(20) not null default '' comment '发布操作人的机器IP',
   `release_build_id` bigint(20) unsigned not null default 0 comment '发布的构建ID',
   `release_time` datetime default '1970-01-01 00:00:00' comment '发布时间',
-  `release_message` text default '' comment '发布异常信息',
+  `release_message` text comment '发布异常信息',
   
   -- 回滚信息
   `rollback_user_code` varchar(36) not null default '' comment '回滚操作人',
   `rollback_ip` varchar(20) not null default '' comment '回滚操作人的机器IP',
   `rollback_build_id` bigint(20) unsigned not null default 0 comment '回滚的构建ID',
   `rollback_time` datetime default '1970-01-01 00:00:00' comment '回滚时间',
-  `rollback_message` text not null default '' comment '处理异常信息',
+  `rollback_message` text comment '处理异常信息',
   
   KEY(`app_id`,`env_id`)
 ) comment='发布表' ENGINE=InnoDB DEFAULT CHARSET=utf8; 

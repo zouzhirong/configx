@@ -32,17 +32,17 @@
                     <div class="form-group">
                         <label for="admins" class="col-sm-2 control-label">管理员邮箱</label>
                         <div class="col-sm-10">
-                            <input type="text" name="admins" class="form-control"
-                                   aria-describedby="helpBlock">
-                            <span class="help-block">用户邮箱，多个以,分割。</span>
+                            <textarea name="admins" class="form-control" rows="5"
+                                      aria-describedby="helpBlock">${Request["email"]}</textarea>
+                            <span class="help-block">用户邮箱，可以使用(,)逗号、(;)分号、( )空格、(\t)Tab、(\n)换行来分隔。</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="developers" class="col-sm-2 control-label">开发者邮箱</label>
                         <div class="col-sm-10">
-                            <input type="text" name="developers" class="form-control"
-                                   aria-describedby="helpBlock">
-                            <span class="help-block">用户邮箱，多个以,分割。</span>
+                            <textarea name="developers" class="form-control" rows="5"
+                                      aria-describedby="helpBlock">${Request["email"]}</textarea>
+                            <span class="help-block">用户邮箱，可以使用(,)逗号、(;)分号、( )空格、(\t)Tab、(\n)换行来分隔。</span>
                         </div>
                     </div>
                     <div class="form-group">

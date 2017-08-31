@@ -4,10 +4,10 @@
  */
 package com.configx.web.web.controller;
 
-import com.configx.web.service.app.EnvService;
 import com.configx.web.model.App;
 import com.configx.web.model.Env;
 import com.configx.web.service.app.AppService;
+import com.configx.web.service.app.EnvService;
 import com.configx.web.service.privilege.PrivilegeService;
 import com.configx.web.service.user.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +52,17 @@ public class EnvController {
         App app = appService.getApp(appId);
         List<Env> envList = envService.getEnvList(appId);
         return new ModelAndView("app/env").addObject("appId", appId).addObject("app", app).addObject("envList", envList);
+    }
+
+    /**
+     * 环境列表为空的提示
+     *
+     * @return
+     */
+    @RequestMapping(value = "/apps/{appId}/envs/empty", method = RequestMethod.GET)
+    public ModelAndView emptyList(@PathVariable("appId") int appId) {
+        App app = appService.getApp(appId);
+        return new ModelAndView("app/env_empty").addObject("app", app);
     }
 
     /**

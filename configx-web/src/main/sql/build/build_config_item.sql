@@ -7,7 +7,7 @@ CREATE TABLE `build_config_item` (
   `revision` bigint(20) unsigned not null default 0 comment '修订版本',
   `config_id` bigint(20) unsigned not null comment '配置ID',
   `config_name` varchar(255) not null comment '配置名',
-  `config_value` mediumtext not null default '' comment '配置值',
+  `config_value` mediumtext not null comment '配置值',
   `config_value_id` bigint(20) unsigned not null default 0 comment '配置值ID',
   `config_tags` varchar(255) not null default '' comment '标签，多个标签ID之间用逗号分隔',
 

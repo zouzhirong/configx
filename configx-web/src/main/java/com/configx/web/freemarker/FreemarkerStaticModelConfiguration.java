@@ -1,8 +1,8 @@
 package com.configx.web.freemarker;
 
+import com.configx.web.StringUtils;
 import com.configx.web.locale.LocaleUtils;
 import com.configx.web.locale.MessageUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;

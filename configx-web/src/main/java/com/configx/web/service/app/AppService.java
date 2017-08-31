@@ -4,11 +4,11 @@
  */
 package com.configx.web.service.app;
 
+import com.configx.web.StringUtils;
 import com.configx.web.dao.AppMapper;
 import com.configx.web.model.App;
 import com.configx.web.service.user.UserContext;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -221,7 +221,7 @@ public class AppService {
      */
     public boolean isAdmin(int id, String email) {
         App app = getApp(id);
-        String[] adminList = StringUtils.split(app.getAdmins(), ",");
+        String[] adminList = StringUtils.splitByDelimiters(app.getAdmins());
         for (String admin : adminList) {
             if (admin.equals(email)) {
                 return true;
@@ -239,7 +239,7 @@ public class AppService {
      */
     public boolean isDeveloper(int id, String email) {
         App app = getApp(id);
-        String[] developerList = StringUtils.split(app.getDevelopers(), ",");
+        String[] developerList = StringUtils.splitByDelimiters(app.getDevelopers());
         for (String developer : developerList) {
             if (developer.equals(email)) {
                 return true;
@@ -255,6 +255,7 @@ public class AppService {
      * @param email
      * @return
      */
+
     public boolean isAppAdminOrDeveloper(int id, String email) {
         return isAdmin(id, email) || isDeveloper(id, email);
     }

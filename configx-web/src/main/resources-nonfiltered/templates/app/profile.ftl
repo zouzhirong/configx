@@ -55,53 +55,62 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <tr>
-                        <th>ID</th>
-                        <th>名称</th>
-                        <th>描述</th>
-                        <th>顺序</th>
-                        <th>颜色</th>
-                        <th class="action text-right">操作</th>
-                    </tr>
-                    <#list profileList as profile>
-                        <tr style="<#if profile.color??>background-color: ${profile.color}</#if>">
-                            <td class="id">
-                            ${profile.id}
-                            </td>
-                            <td class="name">
-                            ${profile.name}
-                            </td>
-                            <td>
-                            ${profile.description}
-                            </td>
-                            <td>
-                            ${profile.order}
-                            </td>
-                            <td>
-                            ${profile.color}
-                            </td>
-                            <td class="text-right">
-                                <#if profile.id gt 0>
-                                    <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                            data-target="#editProfileModal" data-app="${app.id}"
-                                            data-profile="${profile.id}"
-                                            aria-label="编辑Profile">
-                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                    </button>
-                                    <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                            data-target="#delProfileModal" data-app="${app.id}"
-                                            data-profile="${profile.id}"
-                                            aria-label="删除Profile">
-                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                    </button>
-                                </#if>
-                            </td>
+            <#if profileList?? && (profileList?size > 1)>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>ID</th>
+                            <th>名称</th>
+                            <th>描述</th>
+                            <th>顺序</th>
+                            <th>颜色</th>
+                            <th class="action text-right">操作</th>
                         </tr>
-                    </#list>
-                </table>
-            </div><!-- /.table-responsive -->
+                        <#list profileList as profile>
+                            <tr style="<#if profile.color??>background-color: ${profile.color}</#if>">
+                                <td class="id">
+                                ${profile.id}
+                                </td>
+                                <td class="name">
+                                ${profile.name}
+                                </td>
+                                <td>
+                                ${profile.description}
+                                </td>
+                                <td>
+                                ${profile.order}
+                                </td>
+                                <td>
+                                ${profile.color}
+                                </td>
+                                <td class="text-right">
+                                    <#if profile.id gt 0>
+                                        <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                                data-target="#editProfileModal" data-app="${app.id}"
+                                                data-profile="${profile.id}"
+                                                aria-label="编辑Profile">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                                data-target="#delProfileModal" data-app="${app.id}"
+                                                data-profile="${profile.id}"
+                                                aria-label="删除Profile">
+                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                        </button>
+                                    </#if>
+                                </td>
+                            </tr>
+                        </#list>
+                    </table>
+                </div><!-- /.table-responsive -->
+            <#else>
+                <div class="panel-body">
+                    <p class="text-center">
+                        您目前没有Profile，<a href="#" data-toggle="modal" data-target="#addProfileModal"
+                                        data-app="${app.id}">创建一个Profile</a>
+                    </p>
+                </div>
+            </#if>
 
             <div class="panel-footer"></div>
         </div>

@@ -18,12 +18,14 @@
                 <li <#if rc.requestUri=="/apps">class="active"</#if>>
                     <a href="/apps">应用管理<span class="sr-only">(current)</span></a>
                 </li>
+            <#if currentApp??>
                 <li <#if rc.requestUri?contains("config")>class="active"</#if>>
                     <a href="/apps/${currentApp.id}/config">配置管理</a>
                 </li>
                 <li <#if rc.requestUri?contains("releaseforms")>class="active"</#if>>
                     <a href="/apps/${currentApp.id}/releaseforms">发布管理</a>
                 </li>
+            </#if>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">

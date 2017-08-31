@@ -4,7 +4,7 @@ CREATE TABLE `config_item` (
   `env_id` int(11) unsigned not null comment '环境ID',
   `profile_id` int(11) unsigned not null comment 'Profile ID',
   `name` varchar(50) not null comment '配置名',
-  `value` mediumtext not null default '' comment '配置值',
+  `value` mediumtext not null comment '配置值',
   `value_id` bigint(20) unsigned not null default 0 comment '配置值ID',
   `value_type` tinyint not null comment '配置值类型',
   `tags` varchar(255) not null default '' comment '标签，多个标签ID之间用逗号分隔',

@@ -52,39 +52,48 @@
                 </div>
             </div>
 
-            <table class="table table-hover">
-                <tr>
-                    <th>环境ID</th>
-                    <th>名称</th>
-                    <th>描述</th>
-                    <th class="action text-right">操作</th>
-                </tr>
-                <#list tagList as tag>
+            <#if tagList?? && (tagList?size > 0)>
+                <table class="table table-hover">
                     <tr>
-                        <td class="id">
-                        ${tag.id}
-                        </td>
-                        <td class="name">
-                        ${tag.name}
-                        </td>
-                        <td>
-                        ${tag.description}
-                        </td>
-                        <td class="text-right">
-                            <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                    data-target="#editTagModal" data-app="${app.id}" data-tag="${tag.id}"
-                                    aria-label="编辑标签">
-                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                            </button>
-                            <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                    data-target="#delTagModal" data-app="${app.id}" data-tag="${tag.id}"
-                                    aria-label="删除标签">
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
-                        </td>
+                        <th>环境ID</th>
+                        <th>名称</th>
+                        <th>描述</th>
+                        <th class="action text-right">操作</th>
                     </tr>
-                </#list>
-            </table>
+                    <#list tagList as tag>
+                        <tr>
+                            <td class="id">
+                            ${tag.id}
+                            </td>
+                            <td class="name">
+                            ${tag.name}
+                            </td>
+                            <td>
+                            ${tag.description}
+                            </td>
+                            <td class="text-right">
+                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                        data-target="#editTagModal" data-app="${app.id}" data-tag="${tag.id}"
+                                        aria-label="编辑标签">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                        data-target="#delTagModal" data-app="${app.id}" data-tag="${tag.id}"
+                                        aria-label="删除标签">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </#list>
+                </table>
+            <#else>
+                <div class="panel-body">
+                    <p class="text-center">
+                        您目前没有标签，<a href="#" data-toggle="modal" data-target="#addTagModal"
+                                   data-app="${app.id}">创建一个标签</a>
+                    </p>
+                </div>
+            </#if>
 
             <div class="panel-footer"></div>
         </div>

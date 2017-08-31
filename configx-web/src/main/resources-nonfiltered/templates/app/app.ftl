@@ -41,19 +41,20 @@
                 </div>
             </div>
 
-            <table class="table table-hover">
-                <tr>
-                    <th colspan="2">应用ID</th>
-                    <th>名称</th>
-                    <th>描述</th>
-                    <th>App Key Secret</th>
-                    <th>管理员</th>
-                    <th>开发者</th>
-                    <th>创建</th>
-                    <th>修改</th>
-                    <th class="action text-right">操作</th>
-                </tr>
-                <#if page.content??>
+            <#if page.content?? && (page.content?size > 0)>
+                <table class="table table-hover">
+                    <tr>
+                        <th colspan="2">应用ID</th>
+                        <th>名称</th>
+                        <th>描述</th>
+                        <th>App Key Secret</th>
+                        <th>管理员</th>
+                        <th>开发者</th>
+                        <th>创建</th>
+                        <th>修改</th>
+                        <th class="action text-right">操作</th>
+                    </tr>
+
                     <#list page.content as app>
                         <tr>
                             <td class="icon">
@@ -74,12 +75,12 @@
                                 App_Secret: ${app.appSecret}
                             </td>
                             <td>
-                                <#list app.admins?split(",") as admin>
+                                <#list StringUtils.splitByDelimiters(app.admins) as admin>
                                 ${admin} <br>
                                 </#list>
                             </td>
                             <td>
-                                <#list app.developers?split(",") as developer>
+                                <#list StringUtils.splitByDelimiters(app.developers) as developer>
                                 ${developer} <br>
                                 </#list>
                             </td>
@@ -110,8 +111,14 @@
                             </td>
                         </tr>
                     </#list>
-                </#if>
-            </table>
+                </table>
+            <#else>
+                <div class="panel-body">
+                    <p class="text-center">
+                        您目前没有应用，<a href="#" data-toggle="modal" data-target="#addAppModal">创建一个应用</a>
+                    </p>
+                </div>
+            </#if>
 
             <div class="panel-footer"></div>
         </div><!-- /.panel -->

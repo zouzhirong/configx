@@ -4,6 +4,7 @@
  */
 package com.configx.web.web.controller;
 
+import com.configx.web.model.*;
 import com.configx.web.page.Page;
 import com.configx.web.page.PageRequest;
 import com.configx.web.service.app.AppService;
@@ -15,10 +16,9 @@ import com.configx.web.service.release.form.ReleaseFormSearchService;
 import com.configx.web.service.release.form.ReleaseFormService;
 import com.configx.web.service.user.UserContext;
 import com.configx.web.web.dto.ReleaseFormDto;
+import com.configx.web.web.dto.ReleaseFormListResponse;
 import com.configx.web.web.dto.ReleaseFormRequest;
 import com.configx.web.web.dto.ReleaseFormSearchForm;
-import com.configx.web.model.*;
-import com.configx.web.web.dto.ReleaseFormListResponse;
 import com.configx.web.web.util.Pair;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -71,6 +71,9 @@ public class ReleaseFormController {
     @RequestMapping(value = "/apps/{appId}/releaseforms", method = RequestMethod.GET)
     public ModelAndView getReleaseFormList(@PathVariable("appId") int appId) {
         Env env = envService.getDefaultEnv(appId);
+        if (env == null) {
+            return new ModelAndView(new RedirectView("/apps/" + appId + "/envs/empty"));
+        }
         return new ModelAndView(new RedirectView("/apps/" + appId + "/releaseforms/" + env.getName()));
     }
 
@@ -97,7 +100,7 @@ public class ReleaseFormController {
         form.setEnvId(env.getId());
 
         // 权限认证
-        if (app == null || !privilegeService.isAppAdminOrDeveloper(form.getAppId(), UserContext.email())) {
+        if (!privilegeService.isAppAdminOrDeveloper(form.getAppId(), UserContext.email())) {
             return new ModelAndView(new RedirectView("/apps/empty"));
         }
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
-    <title>没有应用</title>
+    <title>没有环境</title>
 
     <script src="/libs/jquery/jquery-2.1.4.min.js"></script>
 
@@ -25,10 +25,9 @@
     <#include "../navbar.ftl">
 
     <div class="jumbotron text-center">
-        <h2>欢迎使用ConfigX配置管理系统！</h2>
-        <p>您目前没有应用</p>
+        <p>您目前没有环境</p>
         <#if Request["isAdmin"]>
-            <p><a class="btn btn-primary" href="/apps" role="button">去创建应用</a></p>
+            <p><a class="btn btn-primary" href="/apps/${app.id}/envs" role="button">去创建环境</a></p>
         </#if>
     </div>
 

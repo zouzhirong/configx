@@ -59,74 +59,83 @@
                 </div>
             </div>
 
-            <table class="table table-hover">
-                <tr>
-                    <th>环境ID</th>
-                    <th>名称</th>
-                    <th>别名</th>
-                    <th>描述</th>
-                    <th>顺序</th>
-                    <th>创建</th>
-                    <th>修改</th>
-                    <th>最新修订</th>
-                    <th>上次构建</th>
-                    <th>最新发布</th>
-                    <th>发布模式</th>
-                    <th class="action text-right">操作</th>
-                </tr>
-                <#list envList as env>
+            <#if envList?? && (envList?size > 0)>
+                <table class="table table-hover">
                     <tr>
-                        <td class="id">
-                        ${env.id}
-                        </td>
-                        <td class="name">
-                        ${env.name}
-                        </td>
-                        <td>
-                        ${env.alias}
-                        </td>
-                        <td>
-                        ${env.description}
-                        </td>
-                        <td>
-                        ${env.order}
-                        </td>
-                        <td class="time">
-                        ${env.creator} (${env.createTime?datetime})
-                        </td>
-                        <td class="time">
-                        ${env.updater} (${env.updateTime?datetime})
-                        </td>
-                        <td class="time">
-                        ${env.revision?c} (${(env.dataChangeLastTime?datetime)!})
-                        </td>
-                        <td class="time">
-                            #${env.buildId} (${(env.buildTime?datetime)!})
-                        </td>
-                        <td class="time">
-                            #${env.releaseVersion} (${(env.releaseTime?datetime)!})
-                        </td>
-                        <td>
-                            <#if env.autoRelease>
-                                <span class="text-danger">自动发布</span>
-                            <#else>
-                                <span class="text-info">手动发布</span>
-                            </#if>
-                        <td class="text-right">
-                            <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                    data-target="#editEnvModal" data-app="${app.id}" data-env="${env.id}"
-                                    aria-label="编辑环境">
-                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                            </button>
-                            <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                    data-target="#delEnvModal" data-app="${app.id}" data-env="${env.id}"
-                                    aria-label="删除环境">
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
-                        </td>
+                        <th>环境ID</th>
+                        <th>名称</th>
+                        <th>别名</th>
+                        <th>描述</th>
+                        <th>顺序</th>
+                        <th>创建</th>
+                        <th>修改</th>
+                        <th>最新修订</th>
+                        <th>上次构建</th>
+                        <th>最新发布</th>
+                        <th>发布模式</th>
+                        <th class="action text-right">操作</th>
                     </tr>
-                </#list>
-            </table>
+                    <#list envList as env>
+                        <tr>
+                            <td class="id">
+                            ${env.id}
+                            </td>
+                            <td class="name">
+                            ${env.name}
+                            </td>
+                            <td>
+                            ${env.alias}
+                            </td>
+                            <td>
+                            ${env.description}
+                            </td>
+                            <td>
+                            ${env.order}
+                            </td>
+                            <td class="time">
+                            ${env.creator} (${env.createTime?datetime})
+                            </td>
+                            <td class="time">
+                            ${env.updater} (${env.updateTime?datetime})
+                            </td>
+                            <td class="time">
+                            ${env.revision?c} (${(env.dataChangeLastTime?datetime)!})
+                            </td>
+                            <td class="time">
+                                #${env.buildId} (${(env.buildTime?datetime)!})
+                            </td>
+                            <td class="time">
+                                #${env.releaseVersion} (${(env.releaseTime?datetime)!})
+                            </td>
+                            <td>
+                                <#if env.autoRelease>
+                                    <span class="text-danger">自动发布</span>
+                                <#else>
+                                    <span class="text-info">手动发布</span>
+                                </#if>
+                            <td class="text-right">
+                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                        data-target="#editEnvModal" data-app="${app.id}" data-env="${env.id}"
+                                        aria-label="编辑环境">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                        data-target="#delEnvModal" data-app="${app.id}" data-env="${env.id}"
+                                        aria-label="删除环境">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </#list>
+                </table>
+            <#else>
+                <div class="panel-body">
+                    <p class="text-center">
+                        您目前没有环境，<a href="#" data-toggle="modal" data-target="#addEnvModal"
+                                   data-app="${app.id}">创建一个环境</a>
+                    </p>
+                </div>
+            </#if>
 
             <div class="panel-footer"></div>
         </div>
