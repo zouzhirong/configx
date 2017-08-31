@@ -20,8 +20,8 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.1.199:3306/configx?rewriteBatchedStatements=true&amp;useUnicode=true&amp;characterEncoding=utf8"
-                        userId="root" password="test"/>
+                        connectionURL="jdbc:mysql://localhost:3306/configx?rewriteBatchedStatements=true&amp;useUnicode=true&amp;characterEncoding=utf8"
+                        userId="root" password=""/>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
