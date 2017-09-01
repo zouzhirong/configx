@@ -116,10 +116,10 @@
                         </div>
                         <div class="col-md-1"></div>
                         <div class="col-md-1">
-                            <label class="checkbox-inline text-muted">
-                                <input type="checkbox" class="ichecked form-control" name="onlyDisabled" value="1"
-                                       <#if (form.onlyDisabled)!false>checked</#if>> 仅禁用
-                            </label>
+                            <#--<label class="checkbox-inline text-muted">-->
+                                <#--<input type="checkbox" class="ichecked form-control" name="onlyDisabled" value="1"-->
+                                       <#--<#if (form.onlyDisabled)!false>checked</#if>> 仅禁用-->
+                            <#--</label>-->
                         </div>
                         <label for="configValue" class="col-md-1 control-label text-muted">配置值</label>
                         <div class="col-md-2">

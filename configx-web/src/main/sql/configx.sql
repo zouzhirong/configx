@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS configx;
+USE configx;
+
 CREATE TABLE `app` (
   `id` int(11) unsigned not null auto_increment primary key comment '应用ID',
   `name` varchar(100) not null comment '应用名称',
@@ -333,4 +336,4 @@ CREATE TABLE `user` (
 
 
 -- Admin User
-insert into user(name, email, password, admin) value('Admin', 'admin', 'admin', 1);
+insert into user(name, email, password, admin) value('Admin', 'admin', 'admin123', 1);

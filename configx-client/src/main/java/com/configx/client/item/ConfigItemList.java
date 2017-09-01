@@ -6,7 +6,6 @@ package com.configx.client.item;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +17,6 @@ import java.util.Set;
  *
  * @author zhirong.zou
  */
-@ToString
 public class ConfigItemList {
     /**
      * 版本

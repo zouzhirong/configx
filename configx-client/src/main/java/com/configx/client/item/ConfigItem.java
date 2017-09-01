@@ -4,7 +4,6 @@
  */
 package com.configx.client.item;
 
-import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
@@ -16,7 +15,6 @@ import java.util.List;
  *
  * @author Zhirong Zou
  */
-@Data
 public class ConfigItem {
 
     /**
@@ -46,6 +44,38 @@ public class ConfigItem {
     public ConfigItem(String name, String value) {
         this.name = name;
         this.value = value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

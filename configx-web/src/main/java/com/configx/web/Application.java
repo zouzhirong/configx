@@ -6,6 +6,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.config.ConfigFileApplicationListener;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.WebApplicationInitializer;
@@ -24,13 +25,6 @@ public class Application extends SpringBootServletInitializer implements WebAppl
 
         // 配置系统属性
         configSystemProperties();
-
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                System.out.println("****************JVM Exit Successful****************");
-            }
-        });
     }
 
     /**
@@ -38,6 +32,7 @@ public class Application extends SpringBootServletInitializer implements WebAppl
      */
     private static final void configSystemProperties() {
         System.setProperty("spring.config.name", "application,configx");
+        System.setProperty(ConfigFileApplicationListener.CONFIG_LOCATION_PROPERTY, "file:../config/");
     }
 
     public static void main(String[] args) throws InterruptedException {
