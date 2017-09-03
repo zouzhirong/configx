@@ -6,6 +6,7 @@ package com.configx.client.item.locator;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.env.Environment;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,6 +20,11 @@ public class ConfigClientProperties {
 
     public static final long DEFAULT_UPDATE_INITIAL_DELAY = TimeUnit.MILLISECONDS.toMillis(30 * 1000);
     public static final long DEFAULT_UPDATE_INTERVAL = TimeUnit.MILLISECONDS.toMillis(1 * 1000);
+
+    /**
+     * 是否开启多版本控制
+     */
+    private static volatile boolean mvccEnabled = false;
 
     /**
      * 应用ID
@@ -64,6 +70,15 @@ public class ConfigClientProperties {
      * 更新间隔，默认1秒
      */
     private long updateInterval = DEFAULT_UPDATE_INTERVAL;
+
+    /**
+     * 是否开启了多版本控制，否则总是读取最新版本的配置
+     *
+     * @return
+     */
+    public static boolean isMvccEnabled() {
+        return mvccEnabled;
+    }
 
     public String getApp() {
         return app;
@@ -140,6 +155,12 @@ public class ConfigClientProperties {
     public ConfigClientProperties override(Environment environment) {
         ConfigClientProperties override = new ConfigClientProperties();
         BeanUtils.copyProperties(this, override);
+
+        // mvcc enabled
+        if (environment.containsProperty(ConfigClientProperties.PREFIX + ".mvcc.enabled")) {
+            mvccEnabled = environment.getProperty(ConfigClientProperties.PREFIX + ".mvcc.enabled", Boolean.class);
+        }
+
         if (environment.containsProperty(ConfigClientProperties.PREFIX + ".app")) {
             override.setApp(environment.getProperty(ConfigClientProperties.PREFIX + ".app"));
         }

@@ -7,9 +7,9 @@ package com.configx.client.scope.refresh;
 import com.configx.client.beans.VersionBeanFactory;
 import com.configx.client.env.ConfigVersionManager;
 import com.configx.client.env.MultiVersionPropertySourceFactory;
+import com.configx.client.env.VersionPropertySource;
 import com.configx.client.scope.ScopeCache;
 import com.configx.client.scope.refresh.dependency.RefreshableBeanDependencyManagement;
-import com.configx.client.env.VersionPropertySource;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
@@ -39,34 +39,30 @@ public class VersionBasedScopeCache implements ScopeCache {
 
     @Override
     public Object remove(String name) {
-        // 当前线程使用的配置版本号
-        long version = ConfigVersionManager.getCurrentVersion();
-
-        return versionBeanFactory.remove(version, name);
+        return ConfigVersionManager.doWithVersion(version ->
+                versionBeanFactory.remove(version, name)
+        );
     }
 
     @Override
     public Collection<Object> clear() {
-        // 当前线程使用的配置版本号
-        long version = ConfigVersionManager.getCurrentVersion();
-
-        return versionBeanFactory.clear(version);
+        return ConfigVersionManager.doWithVersion(version ->
+                versionBeanFactory.clear(version)
+        );
     }
 
     @Override
     public Object get(String name) {
-        // 当前线程使用的配置版本号
-        long version = ConfigVersionManager.getCurrentVersion();
-
-        return versionBeanFactory.get(version, name);
+        return ConfigVersionManager.doWithVersion(version ->
+                versionBeanFactory.get(version, name)
+        );
     }
 
     @Override
     public Object put(String name, Object value) {
-        // 当前线程使用的配置版本号
-        long version = ConfigVersionManager.getCurrentVersion();
-
-        return putIfAbsent(version, name, value);
+        return ConfigVersionManager.doWithVersion(version ->
+                putIfAbsent(version, name, value)
+        );
     }
 
     /**

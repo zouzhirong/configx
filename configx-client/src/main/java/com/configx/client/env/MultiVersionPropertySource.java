@@ -41,60 +41,57 @@ public class MultiVersionPropertySource extends EnumerablePropertySource<Object>
 
     @Override
     public Object getProperty(String name) {
-        // 当前线程使用的配置版本号
-        long currentVersion = ConfigVersionManager.getCurrentVersion();
+        return ConfigVersionManager.doWithVersion(version -> {
+            VersionPropertySource<?> propertySource = null;
+            for (int index = this.propertySources.size() - 1; index >= 0; index--) {
+                propertySource = this.propertySources.get(index);
 
-        VersionPropertySource<?> propertySource = null;
-        for (int index = this.propertySources.size() - 1; index >= 0; index--) {
-            propertySource = this.propertySources.get(index);
-
-            if (propertySource.getVersion() <= currentVersion) {
-                Object candidate = propertySource.getProperty(name);
-                if (candidate != null) {
-                    return candidate;
+                if (propertySource.getVersion() <= version) {
+                    Object candidate = propertySource.getProperty(name);
+                    if (candidate != null) {
+                        return candidate;
+                    }
                 }
             }
-        }
 
-        return null;
+            return null;
+        });
     }
 
     @Override
     public boolean containsProperty(String name) {
-        // 当前线程使用的配置版本号
-        long currentVersion = ConfigVersionManager.getCurrentVersion();
+        return ConfigVersionManager.doWithVersion(version -> {
+            VersionPropertySource<?> propertySource = null;
+            for (int index = this.propertySources.size() - 1; index >= 0; index--) {
+                propertySource = this.propertySources.get(index);
 
-        VersionPropertySource<?> propertySource = null;
-        for (int index = this.propertySources.size() - 1; index >= 0; index--) {
-            propertySource = this.propertySources.get(index);
-
-            if (propertySource.getVersion() <= currentVersion) {
-                if (propertySource.containsProperty(name)) {
-                    return true;
+                if (propertySource.getVersion() <= version) {
+                    if (propertySource.containsProperty(name)) {
+                        return true;
+                    }
                 }
             }
-        }
 
-        return false;
+            return false;
+        });
     }
 
     @Override
     public String[] getPropertyNames() {
-        // 当前线程使用的配置版本号
-        long currentVersion = ConfigVersionManager.getCurrentVersion();
+        return ConfigVersionManager.doWithVersion(version -> {
+            Set<String> names = new LinkedHashSet<String>();
 
-        Set<String> names = new LinkedHashSet<String>();
+            VersionPropertySource<?> propertySource = null;
+            for (int index = this.propertySources.size() - 1; index >= 0; index--) {
+                propertySource = this.propertySources.get(index);
 
-        VersionPropertySource<?> propertySource = null;
-        for (int index = this.propertySources.size() - 1; index >= 0; index--) {
-            propertySource = this.propertySources.get(index);
-
-            if (propertySource.getVersion() <= currentVersion) {
-                names.addAll(Arrays.asList(propertySource.getPropertyNames()));
+                if (propertySource.getVersion() <= version) {
+                    names.addAll(Arrays.asList(propertySource.getPropertyNames()));
+                }
             }
-        }
 
-        return StringUtils.toStringArray(names);
+            return StringUtils.toStringArray(names);
+        });
     }
 
     /**
