@@ -4,28 +4,27 @@
  */
 package com.configx.web.web.controller;
 
+import com.configx.web.model.*;
 import com.configx.web.page.Page;
 import com.configx.web.page.PageRequest;
 import com.configx.web.service.app.AppService;
 import com.configx.web.service.app.EnvService;
-import com.configx.web.service.config.ConfigHistorySearchService;
-import com.configx.web.service.config.ConfigItemHistoryService;
-import com.configx.web.web.dto.ConfigCommitSearchForm;
-import com.configx.web.service.config.ConfigCommitService;
-import com.configx.web.service.privilege.PrivilegeService;
-import com.configx.web.web.model.ConfigCommitModel;
-import com.google.common.base.Function;
-import com.configx.web.model.*;
 import com.configx.web.service.app.ProfileService;
 import com.configx.web.service.app.TagService;
+import com.configx.web.service.config.ConfigCommitService;
+import com.configx.web.service.config.ConfigHistorySearchService;
+import com.configx.web.service.config.ConfigItemHistoryService;
+import com.configx.web.service.privilege.PrivilegeService;
 import com.configx.web.service.user.UserContext;
+import com.configx.web.web.dto.ConfigCommitSearchForm;
+import com.configx.web.web.model.ConfigCommitModel;
 import com.configx.web.web.model.ConfigItemHistoryModel;
+import com.google.common.base.Function;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -86,9 +85,7 @@ public class ConfigCommitController {
         form.setEnvId(env.getId());
 
         // 权限认证
-        if (!privilegeService.isAppAdminOrDeveloper(form.getAppId(), UserContext.email())) {
-            return new ModelAndView(new RedirectView("/apps/empty"));
-        }
+        privilegeService.assertAppDeveloper(form.getAppId(), UserContext.email());
 
         List<App> appList = appService.getUserAppList(UserContext.email());
         List<Env> envList = envService.getEnvList(appId);

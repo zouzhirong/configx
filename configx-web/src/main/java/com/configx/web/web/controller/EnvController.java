@@ -45,9 +45,7 @@ public class EnvController {
     public ModelAndView getEnvList(@PathVariable("appId") int appId) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return new ModelAndView("privilege/access_denied");
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         App app = appService.getApp(appId);
         List<Env> envList = envService.getEnvList(appId);
@@ -77,9 +75,7 @@ public class EnvController {
     public Object getEnv(@PathVariable("appId") int appId, @PathVariable("envId") int envId) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         return envService.getEnv(appId, envId);
     }
@@ -103,9 +99,7 @@ public class EnvController {
                             @RequestParam(value = "order", required = false, defaultValue = "0") int order) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         envService.createEnv(appId, name, alias, description, order);
         return true;
@@ -134,9 +128,7 @@ public class EnvController {
                             @RequestParam(value = "order", required = false, defaultValue = "0") int order) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppAdmin(appId, UserContext.email());
 
         envService.modifyEnv(envId, name, alias, autoRelease, description, order);
         return true;
@@ -154,9 +146,7 @@ public class EnvController {
     public Object deleteEnv(@PathVariable("appId") int appId, @PathVariable("envId") int envId) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppAdmin(appId, UserContext.email());
 
         envService.delete(appId, envId);
         return true;

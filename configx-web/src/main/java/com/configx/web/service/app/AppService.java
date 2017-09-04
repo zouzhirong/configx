@@ -4,10 +4,10 @@
  */
 package com.configx.web.service.app;
 
-import com.configx.web.util.StringUtils;
 import com.configx.web.dao.AppMapper;
 import com.configx.web.model.App;
 import com.configx.web.service.user.UserContext;
+import com.configx.web.util.StringUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -248,15 +248,4 @@ public class AppService {
         return false;
     }
 
-    /**
-     * 判断用户邮箱是否是指定应用的管理员或开发者
-     *
-     * @param id
-     * @param email
-     * @return
-     */
-
-    public boolean isAppAdminOrDeveloper(int id, String email) {
-        return isAdmin(id, email) || isDeveloper(id, email);
-    }
 }

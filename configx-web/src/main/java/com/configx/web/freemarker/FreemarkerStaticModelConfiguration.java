@@ -1,8 +1,9 @@
 package com.configx.web.freemarker;
 
-import com.configx.web.util.StringUtils;
 import com.configx.web.locale.LocaleUtils;
 import com.configx.web.locale.MessageUtils;
+import com.configx.web.service.privilege.PrivilegeUtils;
+import com.configx.web.util.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
@@ -33,6 +34,7 @@ public class FreemarkerStaticModelConfiguration {
         properties.put("LocaleUtils", LocaleUtils.class.getName());
         properties.put("MessageUtils", MessageUtils.class.getName());
         properties.put("StringUtils", StringUtils.class.getName());
+        properties.put("PrivilegeUtils", PrivilegeUtils.class.getName());
 
         return properties;
     }

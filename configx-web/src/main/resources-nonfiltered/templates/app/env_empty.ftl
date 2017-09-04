@@ -26,7 +26,7 @@
 
     <div class="jumbotron text-center">
         <p>您目前没有环境</p>
-        <#if Request["isAdmin"]>
+        <#if PrivilegeUtils.isAppDeveloper(app.id)>
             <p><a class="btn btn-primary" href="/apps/${app.id}/envs" role="button">去创建环境</a></p>
         </#if>
     </div>

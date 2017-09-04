@@ -7,8 +7,8 @@ package com.configx.web.web.controller;
 import com.configx.web.model.App;
 import com.configx.web.model.Tag;
 import com.configx.web.service.app.AppService;
-import com.configx.web.service.privilege.PrivilegeService;
 import com.configx.web.service.app.TagService;
+import com.configx.web.service.privilege.PrivilegeService;
 import com.configx.web.service.user.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,9 +47,7 @@ public class TagController {
     public ModelAndView getTagList(@PathVariable("appId") int appId) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return new ModelAndView("privilege/access_denied");
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         App app = appService.getApp(appId);
         List<Tag> tagList = tagService.getTagList(appId);
@@ -68,9 +66,7 @@ public class TagController {
     public Object getTag(@PathVariable("appId") int appId, @PathVariable("tagId") int tagId) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         return tagService.getTag(appId, tagId);
     }
@@ -88,9 +84,7 @@ public class TagController {
     public Object createTag(@PathVariable("appId") int appId, @RequestParam("name") String name, @RequestParam("description") String description) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         tagService.createTag(appId, name, description);
         return true;
@@ -110,9 +104,7 @@ public class TagController {
     public Object modifyTag(@PathVariable("appId") int appId, @PathVariable("tagId") int tagId, @RequestParam("name") String name, @RequestParam("description") String description) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         tagService.modifyTag(tagId, name, description);
         return true;
@@ -130,9 +122,7 @@ public class TagController {
     public Object deleteTag(@PathVariable("appId") int appId, @PathVariable("tagId") int tagId) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         tagService.delete(appId, tagId);
         return true;

@@ -50,11 +50,13 @@
                 <div class="row">
                     <label class="col-lg-2"></label>
                     <div class="col-lg-2 col-lg-push-8 text-right">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
-                                data-target="#addEnvModal" data-app="${app.id}">
-                            新建环境
-                        </button>
+                        <#if PrivilegeUtils.isAppDeveloper(app.id)>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
+                                    data-target="#addEnvModal" data-app="${app.id}">
+                                新建环境
+                            </button>
+                        </#if>
                     </div>
                 </div>
             </div>
@@ -114,16 +116,18 @@
                                     <span class="text-info">手动发布</span>
                                 </#if>
                             <td class="text-right">
-                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                        data-target="#editEnvModal" data-app="${app.id}" data-env="${env.id}"
-                                        aria-label="编辑环境">
-                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                        data-target="#delEnvModal" data-app="${app.id}" data-env="${env.id}"
-                                        aria-label="删除环境">
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                </button>
+                                <#if PrivilegeUtils.isAppAdmin(app.id)>
+                                    <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                            data-target="#editEnvModal" data-app="${app.id}" data-env="${env.id}"
+                                            aria-label="编辑环境">
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                            data-target="#delEnvModal" data-app="${app.id}" data-env="${env.id}"
+                                            aria-label="删除环境">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    </button>
+                                </#if>
                             </td>
                         </tr>
                     </#list>

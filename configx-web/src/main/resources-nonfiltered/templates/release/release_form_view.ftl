@@ -135,7 +135,7 @@
                     </div>
                 </#if>
                     <#if releaseForm.auditStatus==2><!-- 待审核-->
-                    <#if isAppAdmin>
+                    <#if PrivilegeUtils.isAppAdmin(app.id)>
                         <div class="row">
                             <div class="col-lg-1 col-md-offset-10 text-right">
                                 <form

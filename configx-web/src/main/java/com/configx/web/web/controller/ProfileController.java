@@ -7,8 +7,8 @@ package com.configx.web.web.controller;
 import com.configx.web.model.App;
 import com.configx.web.model.Profile;
 import com.configx.web.service.app.AppService;
-import com.configx.web.service.privilege.PrivilegeService;
 import com.configx.web.service.app.ProfileService;
+import com.configx.web.service.privilege.PrivilegeService;
 import com.configx.web.service.user.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,9 +47,7 @@ public class ProfileController {
     public ModelAndView getProfileList(@PathVariable("appId") int appId) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return new ModelAndView("privilege/access_denied");
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         App app = appService.getApp(appId);
 
@@ -70,9 +68,7 @@ public class ProfileController {
     public Object getProfile(@PathVariable("appId") int appId, @PathVariable("profileId") int profileId) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         return profileService.getProfile(appId, profileId);
     }
@@ -96,9 +92,7 @@ public class ProfileController {
                                 @RequestParam(value = "color", required = false, defaultValue = "") String color) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         profileService.createProfile(appId, name, description, order, color);
         return true;
@@ -125,9 +119,7 @@ public class ProfileController {
                                 @RequestParam(value = "color", required = false, defaultValue = "") String color) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         profileService.modifyProfile(appId, profileId, name, description, order, color);
         return true;
@@ -145,9 +137,7 @@ public class ProfileController {
     public Object deleteProfile(@PathVariable("appId") int appId, @PathVariable("profileId") int profileId) {
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         profileService.delete(appId, profileId);
         return true;

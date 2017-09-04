@@ -44,10 +44,12 @@
                 <div class="row">
                     <label class="col-lg-2"></label>
                     <div class="col-lg-2 col-lg-push-8 text-right">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
-                                data-target="#addTagModal" data-app="${app.id}">新建Tag
-                        </button>
+                        <#if PrivilegeUtils.isAppDeveloper(app.id)>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
+                                    data-target="#addTagModal" data-app="${app.id}">新建Tag
+                            </button>
+                        </#if>
                     </div>
                 </div>
             </div>
@@ -72,26 +74,30 @@
                             ${tag.description}
                             </td>
                             <td class="text-right">
-                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                        data-target="#editTagModal" data-app="${app.id}" data-tag="${tag.id}"
-                                        aria-label="编辑标签">
-                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                        data-target="#delTagModal" data-app="${app.id}" data-tag="${tag.id}"
-                                        aria-label="删除标签">
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                </button>
+                                <#if PrivilegeUtils.isAppDeveloper(app.id)>
+                                    <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                            data-target="#editTagModal" data-app="${app.id}" data-tag="${tag.id}"
+                                            aria-label="编辑标签">
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                            data-target="#delTagModal" data-app="${app.id}" data-tag="${tag.id}"
+                                            aria-label="删除标签">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    </button>
+                                </#if>
                             </td>
                         </tr>
                     </#list>
                 </table>
             <#else>
                 <div class="panel-body">
-                    <p class="text-center">
-                        您目前没有标签，<a href="#" data-toggle="modal" data-target="#addTagModal"
-                                   data-app="${app.id}">创建一个标签</a>
-                    </p>
+                    <#if PrivilegeUtils.isAppDeveloper(app.id)>
+                        <p class="text-center">
+                            您目前没有标签，<a href="#" data-toggle="modal" data-target="#addTagModal"
+                                       data-app="${app.id}">创建一个标签</a>
+                        </p>
+                    </#if>
                 </div>
             </#if>
 

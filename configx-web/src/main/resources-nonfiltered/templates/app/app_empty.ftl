@@ -27,9 +27,7 @@
     <div class="jumbotron text-center">
         <h2>欢迎使用ConfigX配置管理系统！</h2>
         <p>您目前没有应用</p>
-        <#if Request["isAdmin"]>
-            <p><a class="btn btn-primary" href="/apps" role="button">去创建应用</a></p>
-        </#if>
+        <p><a class="btn btn-primary" href="/apps" role="button">去创建应用</a></p>
     </div>
 
 </div>

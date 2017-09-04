@@ -104,9 +104,7 @@ public class ConfigController {
         }
 
         // 权限认证
-        if (!privilegeService.isAppAdminOrDeveloper(form.getAppId(), UserContext.email())) {
-            return new ModelAndView(new RedirectView("/apps/empty"));
-        }
+        privilegeService.assertAppDeveloper(form.getAppId(), UserContext.email());
 
         List<App> appList = appService.getUserAppList(UserContext.email());
         List<Env> envList = envService.getEnvList(appId);

@@ -32,7 +32,7 @@
                     <label class="col-lg-2">应用列表</label>
                     <div class="col-lg-2 col-lg-push-8 text-right">
                         <!-- Button trigger modal -->
-                        <#if Request["isAdmin"]>
+                        <#if PrivilegeUtils.isAppDeveloper(app.id)>
                             <a class="btn btn-default" href="/apps/${app.id}/hooks/log">Webhook 日志</a>
                             <a class="btn btn-default" href="/apps/${app.id}/hooks/new">添加 Webhook</a>
                         </#if>

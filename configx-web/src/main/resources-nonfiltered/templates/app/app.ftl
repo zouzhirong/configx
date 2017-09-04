@@ -31,12 +31,10 @@
                     <label class="col-lg-2">应用列表</label>
                     <div class="col-lg-2 col-lg-push-8 text-right">
                         <!-- Button trigger modal -->
-                        <#if Request["isAdmin"]>
-                            <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
-                                    data-target="#addAppModal">
-                                创建应用
-                            </button>
-                        </#if>
+                        <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
+                                data-target="#addAppModal">
+                            创建应用
+                        </button>
                     </div>
                 </div>
             </div>
@@ -100,14 +98,16 @@
                                    rel="nofollow">Profiles</a>
                                 <a href="/apps/${app.id}/tags" class="btn btn-sm btn-default" rel="nofollow">标签</a>
                                 <a class="btn btn-default" href="/apps/${app.id}/hooks">Webhooks</a>
-                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                        data-target="#editAppModal" data-app="${app.id}" aria-label="编辑应用">
-                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                        data-target="#delAppModal" data-app="${app.id}" aria-label="删除应用">
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                </button>
+                                <#if PrivilegeUtils.isAppAdmin(app.id)>
+                                    <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                            data-target="#editAppModal" data-app="${app.id}" aria-label="编辑应用">
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                            data-target="#delAppModal" data-app="${app.id}" aria-label="删除应用">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    </button>
+                                </#if>
                             </td>
                         </tr>
                     </#list>

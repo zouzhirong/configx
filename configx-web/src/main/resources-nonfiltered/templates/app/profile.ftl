@@ -47,10 +47,12 @@
                 <div class="row">
                     <label class="col-lg-2"></label>
                     <div class="col-lg-2 col-lg-push-8 text-right">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
-                                data-target="#addProfileModal" data-app="${app.id}">添加Profile
-                        </button>
+                        <#if PrivilegeUtils.isAppDeveloper(app.id)>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
+                                    data-target="#addProfileModal" data-app="${app.id}">添加Profile
+                            </button>
+                        </#if>
                     </div>
                 </div>
             </div>
@@ -84,19 +86,21 @@
                                 ${profile.color}
                                 </td>
                                 <td class="text-right">
-                                    <#if profile.id gt 0>
-                                        <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                                data-target="#editProfileModal" data-app="${app.id}"
-                                                data-profile="${profile.id}"
-                                                aria-label="编辑Profile">
-                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                        </button>
-                                        <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                                                data-target="#delProfileModal" data-app="${app.id}"
-                                                data-profile="${profile.id}"
-                                                aria-label="删除Profile">
-                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                        </button>
+                                    <#if PrivilegeUtils.isAppDeveloper(app.id)>
+                                        <#if profile.id gt 0>
+                                            <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                                    data-target="#editProfileModal" data-app="${app.id}"
+                                                    data-profile="${profile.id}"
+                                                    aria-label="编辑Profile">
+                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                            </button>
+                                            <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
+                                                    data-target="#delProfileModal" data-app="${app.id}"
+                                                    data-profile="${profile.id}"
+                                                    aria-label="删除Profile">
+                                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
+                                        </#if>
                                     </#if>
                                 </td>
                             </tr>
@@ -105,10 +109,12 @@
                 </div><!-- /.table-responsive -->
             <#else>
                 <div class="panel-body">
+                <#if PrivilegeUtils.isAppDeveloper(app.id)>
                     <p class="text-center">
                         您目前没有Profile，<a href="#" data-toggle="modal" data-target="#addProfileModal"
                                         data-app="${app.id}">创建一个Profile</a>
                     </p>
+                </#if>
                 </div>
             </#if>
 

@@ -4,11 +4,11 @@
  */
 package com.configx.web.web.controller;
 
-import com.configx.web.page.Page;
 import com.configx.web.model.App;
+import com.configx.web.page.Page;
+import com.configx.web.page.PageRequest;
 import com.configx.web.service.app.AppService;
 import com.configx.web.service.privilege.PrivilegeService;
-import com.configx.web.page.PageRequest;
 import com.configx.web.service.user.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,7 +46,7 @@ public class AppController {
         if (privilegeService.isAdministrator(UserContext.email())) {
             appList = appService.getAppList();
         } else {
-            appList = appService.getAdminAppList(UserContext.email());
+            appList = appService.getUserAppList(UserContext.email());
         }
 
         PageRequest pageRequest = new PageRequest(page, size);
@@ -75,9 +75,7 @@ public class AppController {
     public Object getApp(@PathVariable("appId") int appId) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppDeveloper(appId, UserContext.email());
 
         return appService.getApp(appId);
     }
@@ -97,11 +95,6 @@ public class AppController {
                             @RequestParam(value = "description", required = false, defaultValue = "") String description,
                             @RequestParam(value = "admins", required = false, defaultValue = "") String admins,
                             @RequestParam(value = "developers", required = false, defaultValue = "") String developers) {
-
-        // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())) {
-            return false;
-        }
 
         appService.createApp(name, description, admins, developers);
         return true;
@@ -126,10 +119,7 @@ public class AppController {
                             @RequestParam(value = "developers", required = false, defaultValue = "") String developers) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())
-                && !privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppAdmin(appId, UserContext.email());
 
         appService.modifyApp(appId, name, description, admins, developers);
         return true;
@@ -146,10 +136,7 @@ public class AppController {
     public Object deleteApp(@PathVariable("appId") int appId) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())
-                && !privilegeService.isAppAdmin(appId, UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppAdmin(appId, UserContext.email());
 
         appService.delete(appId);
         return true;

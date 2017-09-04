@@ -64,7 +64,7 @@
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                     </a>
                     <button type="button" class="glyphicon-btn tooltipped" data-toggle="modal"
-                            data-target="#delFileOptionsModal" data-app="$config.appId}" data-config="${config.id}"
+                            data-target="#delFileOptionsModal" data-app="${config.appId}" data-config="${config.id}"
                             aria-label="删除文件">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </button>

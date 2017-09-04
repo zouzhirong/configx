@@ -115,7 +115,7 @@ $('#delFileOptionsModal').on('show.bs.modal', function (event) {
 
     $.getJSON("/apps/" + appId + "/configitem/" + configId, function (config) {
         modal.find('.modal-body form').attr("action", "/apps/" + appId + "/configitem/" + configId);
-        modal.find('.modal-body form').attr("data-location", "/apps/" + appId + "/config/" + config.envName);
+        modal.find('.modal-body form').attr("data-location", "/apps/" + appId + "/config/" + config.envName + "?profileId=" + config.profileId);
 
         modal.find('.modal-body p[name=config-name]').text(config.name);
     });

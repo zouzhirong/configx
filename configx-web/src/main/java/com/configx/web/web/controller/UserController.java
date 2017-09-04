@@ -80,9 +80,7 @@ public class UserController {
     public Object getUser(@PathVariable("userId") int userId) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAdministrator(UserContext.email());
 
         return userService.getUser(userId);
     }
@@ -103,9 +101,7 @@ public class UserController {
                              @RequestParam(value = "isAdmin", required = false, defaultValue = "false") boolean isAdmin) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())) {
-            return null;
-        }
+        privilegeService.assertAdministrator(UserContext.email());
 
         userService.createUser(name, email, password, isAdmin);
         return true;
@@ -128,9 +124,7 @@ public class UserController {
                              @RequestParam(value = "isAdmin", required = false, defaultValue = "false") boolean isAdmin) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())) {
-            return null;
-        }
+        privilegeService.assertAdministrator(UserContext.email());
 
         userService.modifyUser(userId, name, password, isAdmin);
         return true;
@@ -147,9 +141,7 @@ public class UserController {
     public Object deleteUser(@PathVariable("userId") int userId) {
 
         // 权限认证
-        if (!privilegeService.isAdministrator(UserContext.email())) {
-            return null;
-        }
+        privilegeService.assertAdministrator(UserContext.email());
 
         userService.delete(userId);
         return true;

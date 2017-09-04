@@ -100,9 +100,7 @@ public class ReleaseFormController {
         form.setEnvId(env.getId());
 
         // 权限认证
-        if (!privilegeService.isAppAdminOrDeveloper(form.getAppId(), UserContext.email())) {
-            return new ModelAndView(new RedirectView("/apps/empty"));
-        }
+        privilegeService.assertAppDeveloper(form.getAppId(), UserContext.email());
 
         List<Env> envList = envService.getEnvList(app.getId());
 
@@ -138,14 +136,10 @@ public class ReleaseFormController {
         // 发布信息
         Release release = releaseService.getRelease(releaseForm.getReleaseId());
 
-        // 是否是应用管理员
-        boolean isAppAdmin = appService.isAdmin(releaseForm.getAppId(), UserContext.email());
-
         return new ModelAndView("release/release_form_view")
                 .addObject("app", app)
                 .addObject("releaseForm", releaseForm)
-                .addObject("release", release)
-                .addObject("isAppAdmin", isAppAdmin);
+                .addObject("release", release);
     }
 
     /**
@@ -366,9 +360,7 @@ public class ReleaseFormController {
         ReleaseForm form = releaseFormService.getReleaseForm(appId, releaseFormId);
 
         // 权限认证
-        if (!privilegeService.isAppAdmin(form.getAppId(), UserContext.email())) {
-            return false;
-        }
+        privilegeService.assertAppAdmin(form.getAppId(), UserContext.email());
 
         releaseFormService.audit(releaseFormId, passed);
         return releaseFormService.getReleaseForm(releaseFormId);
