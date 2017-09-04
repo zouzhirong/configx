@@ -41,9 +41,9 @@ import java.util.concurrent.TimeUnit;
  *
  * 2、在线程池中执行的任务，可以在ThreadPoolExecutor的afterExecute方法中清除，比如：
  * @Override
- * public void beforeExecute(Thread t, Runnable r) {
+ * public void afterExecute(Thread t, Runnable r) {
  *      ConfigVersionManager.clearCurrentVersion();
- *      super.beforeExecute(t, r);
+ *      super.afterExecute(t, r);
  * }
  *
  * 3、自定义“事务”，可以使用try...finally来清除，比如：
