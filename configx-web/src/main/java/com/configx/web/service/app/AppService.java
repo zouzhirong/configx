@@ -6,6 +6,7 @@ package com.configx.web.service.app;
 
 import com.configx.web.dao.AppMapper;
 import com.configx.web.model.App;
+import com.configx.web.service.privilege.PrivilegeService;
 import com.configx.web.service.user.UserContext;
 import com.configx.web.util.StringUtils;
 import org.apache.commons.lang.RandomStringUtils;
@@ -25,6 +26,9 @@ public class AppService {
 
     @Autowired
     private AppMapper appMapper;
+
+    @Autowired
+    private PrivilegeService privilegeService;
 
     /**
      * 获取App列表
@@ -62,7 +66,11 @@ public class AppService {
      * @return
      */
     public List<App> getUserAppList(String email) {
-        return appMapper.selectByAdminAndDeveloper(email);
+        if (privilegeService.isAdministrator(email)) {
+            return getAppList();
+        } else {
+            return appMapper.selectByAdminAndDeveloper(email);
+        }
     }
 
     /**

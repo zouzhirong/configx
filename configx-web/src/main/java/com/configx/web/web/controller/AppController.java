@@ -42,12 +42,7 @@ public class AppController {
     @RequestMapping(value = "/apps", method = RequestMethod.GET)
     public ModelAndView getAppList(@RequestParam(name = "page", required = false, defaultValue = "1") int page, @RequestParam(name = "size", required = false, defaultValue = "10") int size) {
 
-        List<App> appList = null;
-        if (privilegeService.isAdministrator(UserContext.email())) {
-            appList = appService.getAppList();
-        } else {
-            appList = appService.getUserAppList(UserContext.email());
-        }
+        List<App> appList = appService.getUserAppList(UserContext.email());
 
         PageRequest pageRequest = new PageRequest(page, size);
         Page<Void, App> pageResponse = new Page<>(appList, pageRequest);
