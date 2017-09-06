@@ -200,6 +200,9 @@ public class UserService {
      */
     private void beforeLogin(String email) {
         User user = getUser(email);
+        if (user == null) {
+            throw new ConfigException(ErrorCode.LOGIN_FAILED, "login failed");
+        }
 
         // 错误次数已经达上限
         if (user.getErrorCount() >= MAX_ERROR_COUNT) {
@@ -220,6 +223,11 @@ public class UserService {
      * @param email
      */
     private void afterLogin(String email, boolean success) {
+        User user = getUser(email);
+        if (user == null) {
+            return;
+        }
+
         // 更新登录时间
         userMapper.updateLoginTime(email, new Date());
 
@@ -227,9 +235,8 @@ public class UserService {
             userMapper.clearError(email);
         } else {
             userMapper.incrError(email);
-
+            user.setErrorCount(user.getErrorCount() + 1);
             // 剩余错误次数
-            User user = getUser(email);
             int remainErrorCount = MAX_ERROR_COUNT - user.getErrorCount();
             if (remainErrorCount > 0) {
                 throw new ConfigException(ErrorCode.LOGIN_ERROR, "login error", remainErrorCount);

@@ -11,6 +11,11 @@ public class ErrorCode {
     public static final String ACCESS_DENIED = "access_denied";
 
     /**
+     * 登录失败
+     */
+    public static final String LOGIN_FAILED = "login_failed";
+
+    /**
      * 登录错误
      */
     public static final String LOGIN_ERROR = "login_error";
