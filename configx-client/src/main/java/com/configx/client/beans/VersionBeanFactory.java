@@ -27,8 +27,6 @@ public class VersionBeanFactory {
 
     /**
      * clear all version beans
-     *
-     * @return
      */
     public void clear() {
         versionBeansMap.clear();
