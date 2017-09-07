@@ -167,5 +167,9 @@
   <select id="getVersions" resultMap="BaseResultMap">
     select * from `release_version` where app_id=#{appId} and env_id=#{envId}
   </select>
-  
+
+  <select id="getLatestVersion" resultMap="BaseResultMap">
+    select * from `release_version` where app_id=#{appId} and env_id=#{envId} order by number desc limit 1
+  </select>
+
 </mapper>

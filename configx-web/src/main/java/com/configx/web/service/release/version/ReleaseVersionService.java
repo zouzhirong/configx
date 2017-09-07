@@ -5,11 +5,11 @@
 package com.configx.web.service.release.version;
 
 import com.configx.web.dao.ReleaseVersionMapper;
+import com.configx.web.model.*;
 import com.configx.web.service.app.AppService;
 import com.configx.web.service.app.EnvService;
-import com.configx.web.service.release.ReleaseService;
-import com.configx.web.model.*;
 import com.configx.web.service.build.BuildService;
+import com.configx.web.service.release.ReleaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -194,21 +194,7 @@ public class ReleaseVersionService {
      * @return
      */
     public ReleaseVersion getLatestVersion(int appId, int envId) {
-        List<ReleaseVersion> versions = getVersions(appId, envId);
-        if (versions == null || versions.isEmpty()) {
-            return null;
-        }
-        ReleaseVersion latestVersion = null;
-        for (ReleaseVersion r : versions) {
-            if (latestVersion == null) {
-                latestVersion = r;
-            } else {
-                if (latestVersion.getNumber() < r.getNumber()) {
-                    latestVersion = r;
-                }
-            }
-        }
-        return latestVersion;
+        return releaseVersionMapper.getLatestVersion(appId, envId);
     }
 
     /**

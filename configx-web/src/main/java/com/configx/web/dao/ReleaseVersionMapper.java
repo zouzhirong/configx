@@ -55,4 +55,6 @@ public interface ReleaseVersionMapper {
     int updateByPrimaryKey(ReleaseVersion record);
     
     List<ReleaseVersion> getVersions(@Param("appId") int appId, @Param("envId") int envId);
+
+    ReleaseVersion getLatestVersion(@Param("appId") int appId, @Param("envId") int envId);
 }
