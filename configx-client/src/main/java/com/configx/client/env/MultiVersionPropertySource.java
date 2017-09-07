@@ -47,8 +47,8 @@ public class MultiVersionPropertySource extends EnumerablePropertySource<Object>
                 propertySource = this.propertySources.get(index);
 
                 if (propertySource.getVersion() <= version) {
-                    Object candidate = propertySource.getProperty(name);
-                    if (candidate != null) {
+                    if (propertySource.containsProperty(name)) { // 版本中有这个属性，直接返回属性的值
+                        Object candidate = propertySource.getProperty(name); // 已经删除的配置，属性值返回null
                         return candidate;
                     }
                 }
