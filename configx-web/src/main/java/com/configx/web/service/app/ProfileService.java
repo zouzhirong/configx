@@ -13,10 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Profile Service
@@ -30,6 +27,8 @@ public class ProfileService {
 
     @Autowired
     private ProfileMapper profileMapper;
+
+    private ProfileComparator comparator = new ProfileComparator();
 
     /**
      * 获取Profile
@@ -104,6 +103,10 @@ public class ProfileService {
     public List<Profile> getProfileList(int appId) {
         List<Profile> list = profileMapper.selectByAppId(appId);
         list.add(0, defaultProfile(appId));
+
+        // 排序
+        Collections.sort(list, comparator);
+
         return list;
     }
 

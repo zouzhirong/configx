@@ -57,17 +57,19 @@
                                 <#if profileList??>
                                 <optgroup label="分组">
                                     <#list profileList as profile>
+                                        <#if (profile_index > 0)>
+                                            <#if (profile_index < (profileList?size-1))>
+                                                <#if profile.order - profileList[profile_index-1].order gte 100>
+                                                </optgroup>
+                                                <optgroup label="分组">
+                                                </#if>
+                                            </#if>
+                                        </#if>
                                         <option value="${profile.id}"
                                                 <#if ((form.profileId)!0) == profile.id>selected</#if>>
                                         ${MessageUtils.getMessage("app.profile.name."+profile.name, profile.name)}
+                                            -${profile.order}
                                         </option>
-                                        <#if previousProfile??>
-                                            <#if (profile.order - previousProfile.order gte 100)>
-                                            </optgroup>
-                                            <optgroup label="分组">
-                                            </#if>
-                                        </#if>
-                                        <#assign previousProfile=profile />
                                     </#list>
                                 </optgroup>
                                 </#if>
@@ -116,7 +118,7 @@
                         </div>
                         <div class="col-md-1"></div>
                         <div class="col-md-1">
-                            <#--<label class="checkbox-inline text-muted">-->
+                        <#--<label class="checkbox-inline text-muted">-->
                                 <#--<input type="checkbox" class="ichecked form-control" name="onlyDisabled" value="1"-->
                                        <#--<#if (form.onlyDisabled)!false>checked</#if>> 仅禁用-->
                             <#--</label>-->
