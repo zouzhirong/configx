@@ -1,7 +1,5 @@
 package com.configx.web;
 
-import com.configx.web.mybatis.SpringBootExecutableJarVFS;
-import org.apache.ibatis.io.VFS;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,11 +16,6 @@ import org.springframework.web.WebApplicationInitializer;
 public class Application extends SpringBootServletInitializer implements WebApplicationInitializer {
 
     static {
-
-
-        // 添加自定义VFS实现，Mybatis默认VFS实现不支持SpringBoot，导致Mybatis无法注册Type Alias
-        VFS.addImplClass(SpringBootExecutableJarVFS.class);
-
         // 配置系统属性
         configSystemProperties();
     }
