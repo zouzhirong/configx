@@ -65,7 +65,7 @@ public class MessageSourceConfigItemListener extends ConfigItemListenerSupport i
     protected void refreshProperties(String filename, String value) {
         ConfigMessageManager manager = applicationContext.getBean(ConfigMessageManager.class);
 
-        if (manager.isLocalFile(filename)) {
+        if (manager.isMessageSourceFile(filename)) {
             manager.refreshProperties(filename, value);
             logger.debug("ConfigItem change: Locale File=" + filename);
         }

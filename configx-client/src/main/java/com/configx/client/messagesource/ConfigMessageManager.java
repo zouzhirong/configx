@@ -4,7 +4,6 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -27,14 +26,11 @@ public class ConfigMessageManager implements EnvironmentAware {
 
     private static final String XML_SUFFIX = ".xml";
 
-    private Environment environment;
+    private static final String BASENAME_DELIMITERS = ",; \t\n";
 
     private String[] basenames = new String[0];
 
-    /**
-     * Cache all filenames
-     */
-    private final ConcurrentHashMap<String, Object> filenameSet = new ConcurrentHashMap<>();
+    private boolean fallbackToSystemLocale = true;
 
     /**
      * Cache to hold filename lists per Locale
@@ -49,19 +45,22 @@ public class ConfigMessageManager implements EnvironmentAware {
             new ConcurrentHashMap<>();
 
 
+    private Environment environment;
+
     @Override
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
 
     /**
-     * Set basename
+     * Set basename, multiple basename can be separated by comma delimiters
      *
      * @param basename
      */
     public void setBasename(String basename) {
         if (basename != null) {
-            String[] basenames = StringUtils.commaDelimitedListToStringArray(basename);
+            String[] basenames = org.springframework.util.StringUtils.
+                    tokenizeToStringArray(basename, BASENAME_DELIMITERS);
             setBasenames(basenames);
         } else {
             String[] basenames = null;
@@ -85,10 +84,7 @@ public class ConfigMessageManager implements EnvironmentAware {
         } else {
             this.basenames = new String[0];
         }
-
-        calculateAllFilenames();
     }
-
 
     /**
      * Get basenames
@@ -105,41 +101,23 @@ public class ConfigMessageManager implements EnvironmentAware {
     }
 
     /**
-     * Calculate all basenames filenames
+     * Set whether to fall back to the system Locale if no files for a specific
+     * Locale have been found. Default is "true"; if this is turned off, the only
+     * fallback will be the default file (e.g. "messages.properties" for
+     * basename "messages").
+     * <p>Falling back to the system Locale is the default behavior of
+     * {@code java.util.ResourceBundle}. However, this is often not desirable
+     * in an application server environment, where the system Locale is not relevant
+     * to the application at all: Set this flag to "false" in such a scenario.
      */
-    private void calculateAllFilenames() {
-        String[] basenames = getBasenames();
-        for (String basename : basenames) {
-            for (Locale locale : Locale.getAvailableLocales()) {
-                List<String> filenames = calculateAllFilenames(basename, locale);
-                for (String filename : filenames) {
-                    this.filenameSet.put(filename, new Object());
-                }
-            }
-        }
+    public void setFallbackToSystemLocale(boolean fallbackToSystemLocale) {
+        this.fallbackToSystemLocale = fallbackToSystemLocale;
     }
 
     /**
-     * 判断文件名是否是国际化文件
-     *
-     * @param fullFilename
-     * @return
+     * Resolves the given message code as key in the retrieved files,
+     * returning the value found in the file as-is (without MessageFormat parsing).
      */
-    public boolean isLocalFile(String fullFilename) {
-        if (!fullFilename.endsWith(PROPERTIES_SUFFIX) && !fullFilename.endsWith(XML_SUFFIX)) {
-            return false;
-        }
-
-        // 去掉文件后缀.xml或.properties
-        String filename = fullFilename;
-        int indexOfSuffix = fullFilename.lastIndexOf(".");
-        if (indexOfSuffix >= 0) {
-            filename = fullFilename.substring(0, indexOfSuffix);
-        }
-
-        return filenameSet.containsKey(filename);
-    }
-
     protected String resolveCodeWithoutArguments(String code, Locale locale) {
         String[] basenames = getBasenames();
         for (String basename : basenames) {
@@ -158,6 +136,10 @@ public class ConfigMessageManager implements EnvironmentAware {
         return null;
     }
 
+    /**
+     * Resolves the given message code as key in the retrieved files,
+     * using a cached MessageFormat instance per message code.
+     */
     protected MessageFormat resolveCode(String code, Locale locale) {
         String[] basenames = getBasenames();
         for (String basename : basenames) {
@@ -174,35 +156,6 @@ public class ConfigMessageManager implements EnvironmentAware {
         }
 
         return null;
-    }
-
-    /**
-     * Refresh Properties
-     *
-     * @param fullFilename
-     * @param value
-     */
-    public void refreshProperties(String fullFilename, String value) {
-        PropertiesHolder propHolder = new PropertiesHolder(fullFilename, value);
-
-        // 去掉文件后缀.xml或.properties
-        String filename = fullFilename;
-        int indexOfSuffix = fullFilename.lastIndexOf(".");
-        if (indexOfSuffix >= 0) {
-            filename = fullFilename.substring(0, indexOfSuffix);
-        }
-        cachedProperties.put(filename, propHolder);
-    }
-
-    /**
-     * Get a PropertiesHolder for the given filename, either from the
-     * cache or freshly loaded.
-     *
-     * @param filename the bundle filename (basename + Locale)
-     * @return the current PropertiesHolder for the bundle
-     */
-    protected PropertiesHolder getProperties(String filename) {
-        return cachedProperties.get(filename);
     }
 
     /**
@@ -226,6 +179,16 @@ public class ConfigMessageManager implements EnvironmentAware {
         List<String> filenames = new ArrayList<String>(7);
         filenames.addAll(calculateFilenamesForLocale(basename, locale));
         filenames.addAll(calculateFilenamesForLanguageTag(basename, locale));
+        if (this.fallbackToSystemLocale && !locale.equals(Locale.getDefault())) {
+            List<String> fallbackFilenames = calculateFilenamesForLocale(basename, Locale.getDefault());
+            fallbackFilenames.addAll(calculateFilenamesForLanguageTag(basename, locale));
+            for (String fallbackFilename : fallbackFilenames) {
+                if (!filenames.contains(fallbackFilename)) {
+                    // Entry for fallback locale that isn't already in filenames list.
+                    filenames.add(fallbackFilename);
+                }
+            }
+        }
         filenames.add(basename);
         if (localeMap == null) {
             localeMap = new ConcurrentHashMap<Locale, List<String>>();
@@ -235,7 +198,6 @@ public class ConfigMessageManager implements EnvironmentAware {
             }
         }
         localeMap.put(locale, filenames);
-
         return filenames;
     }
 
@@ -304,6 +266,64 @@ public class ConfigMessageManager implements EnvironmentAware {
         }
 
         return result;
+    }
+
+
+    /**
+     * 判断文件名是否是国际化消息文件
+     *
+     * @param fullFilename
+     * @return
+     */
+    public boolean isMessageSourceFile(String fullFilename) {
+        if (!fullFilename.endsWith(PROPERTIES_SUFFIX) && !fullFilename.endsWith(XML_SUFFIX)) {
+            return false;
+        }
+
+        // 去掉文件后缀.xml或.properties
+        String filename = fullFilename;
+        int indexOfSuffix = fullFilename.lastIndexOf(".");
+        if (indexOfSuffix >= 0) {
+            filename = fullFilename.substring(0, indexOfSuffix);
+        }
+
+        String[] basenames = getBasenames();
+        for (String basename : basenames) {
+            if (filename.startsWith(basename)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Refresh Properties
+     *
+     * @param fullFilename
+     * @param value
+     */
+    public void refreshProperties(String fullFilename, String value) {
+        PropertiesHolder propHolder = new PropertiesHolder(fullFilename, value);
+
+        // 去掉文件后缀.xml或.properties
+        String filename = fullFilename;
+        int indexOfSuffix = fullFilename.lastIndexOf(".");
+        if (indexOfSuffix >= 0) {
+            filename = fullFilename.substring(0, indexOfSuffix);
+        }
+        cachedProperties.put(filename, propHolder);
+    }
+
+    /**
+     * Get a PropertiesHolder for the given filename, either from the
+     * cache or freshly loaded.
+     *
+     * @param filename the bundle filename (basename + Locale)
+     * @return the current PropertiesHolder for the bundle
+     */
+    protected PropertiesHolder getProperties(String filename) {
+        return cachedProperties.get(filename);
     }
 
 }
