@@ -53,8 +53,10 @@ public interface ReleaseVersionMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(ReleaseVersion record);
-    
+
     List<ReleaseVersion> getVersions(@Param("appId") int appId, @Param("envId") int envId);
+
+    List<ReleaseVersion> getVersionsBetween(@Param("appId") int appId, @Param("envId") int envId, @Param("fromVerion") long fromVerion, @Param("toVersion") long toVersion);
 
     ReleaseVersion getLatestVersion(@Param("appId") int appId, @Param("envId") int envId);
 }

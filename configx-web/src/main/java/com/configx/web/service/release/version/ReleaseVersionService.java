@@ -176,6 +176,19 @@ public class ReleaseVersionService {
     }
 
     /**
+     * 获取两个版本之间的版本列表，包含这两个版本
+     *
+     * @param appId
+     * @param envId
+     * @param fromVerion
+     * @param toVersion
+     * @return
+     */
+    public List<ReleaseVersion> getVersionsBetween(int appId, int envId, long fromVerion, long toVersion) {
+        return releaseVersionMapper.getVersionsBetween(appId, envId, fromVerion, toVersion);
+    }
+
+    /**
      * 返回指定应用指定环境的发布版本
      *
      * @param appId

@@ -4,14 +4,14 @@
  */
 package com.configx.web.service.config;
 
-import com.configx.web.web.model.ConfigItemList;
-import com.configx.web.service.release.version.ReleaseVersionContants;
-import com.configx.web.service.release.version.ReleaseVersionService;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import com.configx.web.model.*;
 import com.configx.web.service.app.*;
 import com.configx.web.service.build.BuildService;
+import com.configx.web.service.release.version.ReleaseVersionContants;
+import com.configx.web.service.release.version.ReleaseVersionService;
+import com.configx.web.web.model.ConfigItemList;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,6 +69,8 @@ public class ConfigRestService {
 
         Env env = envService.getEnv(appId, envName);
         List<Integer> profileIdList = profileService.getOrderedProfileIdList(appId, profiles);
+        // 添加默认Profile
+        profileIdList.add(ProfileContants.DEFAULT_PROFILE_ID);
 
         // 最新发布的版本
         ReleaseVersion latestVersion = releaseVersionService.getLatestVersion(appId, env.getId());
@@ -107,6 +109,8 @@ public class ConfigRestService {
 
         Env env = envService.getEnv(appId, envName);
         List<Integer> profileIdList = profileService.getOrderedProfileIdList(appId, profiles);
+        // 添加默认Profile
+        profileIdList.add(ProfileContants.DEFAULT_PROFILE_ID);
 
         // 最新发布的版本
         ReleaseVersion latestVersion = releaseVersionService.getLatestVersion(appId, env.getId());
@@ -128,7 +132,8 @@ public class ConfigRestService {
         ReleaseVersion toReleaseVersion = releaseVersionService.getVersion(appId, env.getId(), toVersion);
 
         // 两个版本之间的Change List
-        List<BuildConfigItem> buildConfigItemList = buildService.getChangedConfigItemList(appId, env.getId(), fromReleaseVersion.getBuildId(), toReleaseVersion.getBuildId());
+        List<BuildConfigItem> buildConfigItemList = buildService.getChangedConfigItemList(appId, env.getId(),
+                fromReleaseVersion.getBuildId(), toReleaseVersion.getBuildId(), profileIdList);
 
         buildConfigItemList = filter(appId, env.getId(), profileIdList, buildConfigItemList);
 
@@ -145,9 +150,6 @@ public class ConfigRestService {
      * @return
      */
     private List<BuildConfigItem> filter(int appId, int envId, List<Integer> profileIdList, List<BuildConfigItem> configItemList) {
-        // 添加默认Profile
-        profileIdList.add(ProfileContants.DEFAULT_PROFILE_ID);
-
         // 获取应用的标签列表
         List<Tag> tagList = tagService.getTagList(appId);
 

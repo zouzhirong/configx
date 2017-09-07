@@ -4,20 +4,20 @@
  */
 package com.configx.web.service.build;
 
+import com.configx.web.dao.BuildConfigChangeMapper;
 import com.configx.web.dao.BuildConfigItemMapper;
 import com.configx.web.dao.BuildMapper;
+import com.configx.web.model.*;
 import com.configx.web.service.app.AppService;
 import com.configx.web.service.app.EnvService;
 import com.configx.web.service.app.ProfileContants;
 import com.configx.web.service.config.ConfigItemHistoryService;
 import com.configx.web.service.config.ConfigService;
 import com.configx.web.service.config.ConfigValueService;
-import com.configx.web.dao.BuildConfigChangeMapper;
-import com.configx.web.model.*;
 import com.configx.web.web.util.Pair;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -171,16 +171,27 @@ public class BuildService {
     /**
      * 获取指定构建中，指定的配置的信息
      *
+     * @param appId
+     * @param envId
      * @param buildId
+     * @param profileIdList
      * @param changedConfigNames
      * @return
      */
-    public List<BuildConfigItem> getConfigItemList(long buildId, List<String> changedConfigNames) {
+    public List<BuildConfigItem> getConfigItemList(int appId, int envId, long buildId, List<Integer> profileIdList, Collection<String> changedConfigNames) {
         if (CollectionUtils.isEmpty(changedConfigNames)) {
             return Collections.emptyList();
         }
-        List<BuildConfigItem> list = buildConfigItemMapper.selectByBuildIdAndConfigNames(buildId, changedConfigNames);
-        return swapInValue(list);
+        List<String> changedConfigNameList = new ArrayList<>(changedConfigNames);
+        List<BuildConfigItem> buildConfigItems = buildConfigItemMapper.selectByBuildIdAndConfigNames(buildId, changedConfigNameList);
+
+        List<BuildConfigItem> filteredBuildConfigItems = new ArrayList<>();
+        for (BuildConfigItem buildConfigItem : buildConfigItems) {
+            if (profileIdList != null && profileIdList.contains(buildConfigItem.getProfileId())) {
+                filteredBuildConfigItems.add(buildConfigItem);
+            }
+        }
+        return swapInValue(filteredBuildConfigItems);
     }
 
     /**
@@ -190,29 +201,58 @@ public class BuildService {
      * @param envId
      * @param lastBuildId
      * @param buildId
+     * @param profileIdList
      * @return
      */
-    public List<BuildConfigItem> getChangedConfigItemList(int appId, int envId, long lastBuildId, long buildId) {
-        List<BuildConfigChange> changes = buildChangeMapper.selectChanges(appId, envId, lastBuildId, buildId);
+    public List<BuildConfigItem> getChangedConfigItemList(int appId, int envId, long lastBuildId, long buildId, List<Integer> profileIdList) {
+        // 获取两次构建之间的配置更改信息
+        List<BuildConfigChange> changes = getChangedConfigBetween(appId, envId, lastBuildId, buildId, profileIdList);
 
-        List<String> changedConfigNames = new ArrayList<>();
-
+        // 更改的配置名称列表
+        Set<String> changedConfigNames = new LinkedHashSet<>();
         for (BuildConfigChange change : changes) {
             changedConfigNames.add(change.getConfigName());
         }
 
-        List<BuildConfigItem> changeConfigItemList = getConfigItemList(buildId, changedConfigNames);
+        // 获取当前构建时，那些更改了的配置名称对应的配置列表
+        List<BuildConfigItem> changeConfigItemList = getConfigItemList(appId, envId, buildId, profileIdList, changedConfigNames);
         Map<String, BuildConfigItem> changeConfigItemMap = new HashMap<>();
         for (BuildConfigItem item : changeConfigItemList) {
             changeConfigItemMap.put(item.getConfigName(), item);
         }
 
+        // 如果已经更改的配置名称在当前构建时没有配置信息，则说明删除了，构造一个已删除的配置信息
         for (String changedConfigName : changedConfigNames) {
             if (!changeConfigItemMap.containsKey(changedConfigName)) {
                 changeConfigItemList.add(generateDeletedConfigItem(appId, envId, buildId, changedConfigName));
             }
         }
         return changeConfigItemList;
+    }
+
+    /**
+     * 返回两次构建之间的Change List
+     *
+     * @param appId
+     * @param envId
+     * @param lastBuildId
+     * @param buildId
+     * @param profileIdList 限定Profile ID列表
+     * @return
+     */
+    public List<BuildConfigChange> getChangedConfigBetween(int appId, int envId, long lastBuildId, long buildId, List<Integer> profileIdList) {
+        // 如果是正常发布，则buildId比lastBuildId大；如果是回滚，则buildId比lastBuildId小
+        long minId = Math.min(lastBuildId, buildId);
+        long maxId = Math.max(lastBuildId, buildId);
+        List<BuildConfigChange> buildConfigChanges = buildChangeMapper.selectChanges(appId, envId, minId, maxId);
+
+        List<BuildConfigChange> filteredBuildConfigChanges = new ArrayList<>();
+        for (BuildConfigChange buildConfigChange : buildConfigChanges) {
+            if (profileIdList != null && profileIdList.contains(buildConfigChange.getProfileId())) {
+                filteredBuildConfigChanges.add(buildConfigChange);
+            }
+        }
+        return filteredBuildConfigChanges;
     }
 
     /**
