@@ -100,6 +100,11 @@ public class MultiVersionPropertySource extends EnumerablePropertySource<Object>
      * @param versionPropertySource the version PropertySource to add
      */
     public void addPropertySource(VersionPropertySource<?> versionPropertySource) {
+
+        // TODO
+        // Pre refresh/instantiate beans which config changed
+        // @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory.preInstantiateSingletons()
+
         if (ConfigVersionManager.addVersion(versionPropertySource.getVersion())) {
             this.propertySources.add(versionPropertySource);
         }

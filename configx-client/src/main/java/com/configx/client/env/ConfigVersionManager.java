@@ -249,4 +249,8 @@ public class ConfigVersionManager {
     public static interface VersionCallback<T> {
         T doWithVersion(long version);
     }
+
+    // TODO
+    // Destroy and Remove not used version-refresh scope beans.
+
 }
