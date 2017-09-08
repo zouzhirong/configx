@@ -74,14 +74,14 @@ public class VersionBasedScopeCache implements ScopeCache {
      * @return
      */
     private Object putIfAbsent(long version, String name, Object value) {
-        // 上一个版本号
-        long previousVersion = ConfigVersionManager.getPreviousVersion(version);
-
         // 当前版本中，存在需要的bean
         Object bean = versionBeanFactory.get(version, name);
         if (bean != null) {
             return bean;
         }
+
+        // 上一个版本号
+        long previousVersion = ConfigVersionManager.getPreviousVersion(version);
 
         // 当前版本中，不存在需要的bean，则创建
         return put(version, previousVersion, name, value);
@@ -127,7 +127,7 @@ public class VersionBasedScopeCache implements ScopeCache {
         }
 
         // Bean不需要创建，则尝试获取上一个版本的bean，来继承
-        return getPreviousVersionBean(version, previousVersion, name);
+        return getPreviousVersionBean(version, previousVersion, name, value);
     }
 
     /**
@@ -167,17 +167,22 @@ public class VersionBasedScopeCache implements ScopeCache {
      * @param version
      * @param previousVersion
      * @param name
+     * @param value
      * @return
      */
-    private Object getPreviousVersionBean(long version, long previousVersion, String name) {
+    private Object getPreviousVersionBean(long version, long previousVersion, String name, Object value) {
         // 设置当前线程使用的配置版本号为上一版本
-        ConfigVersionManager.setCurrentVersion(previousVersion);
+        // ConfigVersionManager.setCurrentVersion(previousVersion);
 
         // 上一个版本的bean可能未初始化,触发初始化
-        getContext().getBean(name);
+        // getContext().getBean(name);
 
         // 恢复当前线程使用的配置版本号为当前版本
-        ConfigVersionManager.setCurrentVersion(version);
+        // ConfigVersionManager.setCurrentVersion(version);
+
+
+        // 上一个版本的bean可能未初始化,触发初始化
+        putIfAbsent(previousVersion, name, value);
 
         // 获取上一个版本的bean
         Object previousBean = versionBeanFactory.get(previousVersion, name);
