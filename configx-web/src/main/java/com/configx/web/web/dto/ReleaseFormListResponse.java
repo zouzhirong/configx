@@ -6,12 +6,12 @@ package com.configx.web.web.dto;
 
 import com.configx.web.model.Release;
 import com.configx.web.model.ReleaseForm;
+import com.configx.web.model.ReleaseVersion;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 发布单响应信息
@@ -30,9 +30,15 @@ public class ReleaseFormListResponse {
      */
     private List<Release> releaseList;
 
-    public ReleaseFormListResponse(List<ReleaseForm> releaseFormList, List<Release> releaseList) {
+    /**
+     * 发布版本列表
+     */
+    private List<ReleaseVersion> releaseVersionList;
+
+    public ReleaseFormListResponse(List<ReleaseForm> releaseFormList, List<Release> releaseList, List<ReleaseVersion> releaseVersionList) {
         this.releaseFormList = releaseFormList;
         this.releaseList = releaseList;
+        this.releaseVersionList = releaseVersionList;
     }
 
     public List<ReleaseFormDto> getReleaseFormDtoList() {
@@ -43,11 +49,20 @@ public class ReleaseFormListResponse {
             }
         }
 
+        Multimap<Long, ReleaseVersion> releaseVersionMultimap = ArrayListMultimap.create();
+        if (releaseVersionList != null) {
+            for (ReleaseVersion releaseVersion : releaseVersionList) {
+                releaseVersionMultimap.put(releaseVersion.getReleaseId(), releaseVersion);
+            }
+        }
+
         List<ReleaseFormDto> dtoList = new ArrayList<>();
         Release release = null;
+        Collection<ReleaseVersion> releaseVersions = null;
         for (ReleaseForm form : releaseFormList) {
             release = releaseMap.get(form.getReleaseId());
-            dtoList.add(new ReleaseFormDto(form, release));
+            releaseVersions = releaseVersionMultimap.get(form.getReleaseId());
+            dtoList.add(new ReleaseFormDto(form, release, releaseVersions));
         }
         return dtoList;
     }

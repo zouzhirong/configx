@@ -88,6 +88,7 @@
                     <th>审核状态</th>
                     <th>审核时间</th>
                     <th>发布状态</th>
+                    <th>发布版本号</th>
                     <th>发布人</th>
                     <th>发布时间</th>
                     <th>回滚人</th>
@@ -163,7 +164,7 @@
                                     </#if>
                                     <#if releaseForm.releaseStatus== 2> <!--发布成功-->
                                         <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                        <span class="text-success">发布成功</span>
+                                        <span class="text-primary">发布成功</span>
                                     </#if>
                                     <#if releaseForm.releaseStatus== 3> <!--发布失败-->
                                         <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -172,22 +173,25 @@
                                     <#if releaseForm.releaseStatus==4> <!--回滚中-->
                                         <span name="spinner" data-release-form="${releaseForm.id}"><img alt=""
                                                                                                         src="/static/img/spinner.gif"></span>
-                                        <span class="text-warning">${statusText}</span>
+                                        <span class="text-warning">回滚中</span>
                                     </#if>
                                     <#if releaseForm.releaseStatus==5> <!--回滚成功-->
                                         <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                        <span class="text-success">发布成功</span>
+                                        <span class="text-success">回滚成功</span>
                                     </#if>
                                     <#if releaseForm.releaseStatus==6> <!--回滚失败-->
                                         <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                        <span class="text-danger">发布失败</span>
+                                        <span class="text-danger">回滚失败</span>
                                     </#if>
                                 </#if>
                             </td>
                             <td>
+                            ${releaseForm.releaseVersionNumber}
+                            </td>
+                            <td>
                                 <#if releaseForm.releaseStatus??>
-					${releaseForm.releaseUserCode}
-				</#if>
+					                ${releaseForm.releaseUserCode}
+				                </#if>
                             </td>
                             <td class="time">
                                 <#if releaseForm.releaseStatus??>
@@ -200,8 +204,8 @@
                             </td>
                             <td>
                                 <#if releaseForm.releaseStatus??>
-					${releaseForm.rollbackUserCode}
-				</#if>
+					                ${releaseForm.rollbackUserCode}
+				                </#if>
                             </td>
                             <td class="time">
                                 <#if releaseForm.releaseStatus??>

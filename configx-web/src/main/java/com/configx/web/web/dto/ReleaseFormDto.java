@@ -2,8 +2,11 @@ package com.configx.web.web.dto;
 
 import com.configx.web.model.Release;
 import com.configx.web.model.ReleaseForm;
+import com.configx.web.model.ReleaseVersion;
 import lombok.Data;
+import org.apache.commons.collections.CollectionUtils;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -69,7 +72,10 @@ public class ReleaseFormDto {
 
     private String rollbackMessage;
 
-    public ReleaseFormDto(ReleaseForm form, Release release) {
+
+    private long releaseVersionNumber;
+
+    public ReleaseFormDto(ReleaseForm form, Release release, Collection<ReleaseVersion> releaseVersions) {
         this.id = form.getId();
         this.releaseId = form.getReleaseId();
         this.appId = form.getAppId();
@@ -100,5 +106,29 @@ public class ReleaseFormDto {
             this.releaseMessage = release.getReleaseMessage();
             this.rollbackMessage = release.getRollbackMessage();
         }
+
+        ReleaseVersion releaseVersion = getLatestVersion(releaseVersions);
+        if (releaseVersion != null) {
+            this.releaseVersionNumber = releaseVersion.getNumber();
+        }
+    }
+
+    /**
+     * 一个发布单发布后会有一个发布版本，如果回滚的话，会生成一个新的回滚的发布版本。
+     *
+     * @param releaseVersions
+     * @return
+     */
+    private ReleaseVersion getLatestVersion(Collection<ReleaseVersion> releaseVersions) {
+        if (CollectionUtils.isEmpty(releaseVersions)) {
+            return null;
+        }
+        ReleaseVersion releaseVersion = null;
+        for (ReleaseVersion e : releaseVersions) {
+            if (releaseVersion == null || releaseVersion.getNumber() < e.getNumber()) {
+                releaseVersion = e;
+            }
+        }
+        return releaseVersion;
     }
 }

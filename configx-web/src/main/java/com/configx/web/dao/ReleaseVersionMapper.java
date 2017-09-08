@@ -58,5 +58,7 @@ public interface ReleaseVersionMapper {
 
     List<ReleaseVersion> getVersionsBetween(@Param("appId") int appId, @Param("envId") int envId, @Param("fromVerion") long fromVerion, @Param("toVersion") long toVersion);
 
+    List<ReleaseVersion> getVersionsByReleaseIdList(List<Long> releaseIdList);
+
     ReleaseVersion getLatestVersion(@Param("appId") int appId, @Param("envId") int envId);
 }

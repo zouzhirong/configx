@@ -298,14 +298,21 @@
 
 
             <div class="panel-footer">
-                <#if latestCommit??>
-                    <div class="text-right">
-                    ${latestCommit.author} 于 ${latestCommit.date?datetime} 提交版本 <a
-                            href="/apps/${latestCommit.appId}/commits/${latestCommit.envName}?revision=${latestCommit.revision?c}">#${latestCommit.revision?c}</a>
-                        &emsp;
-                    ${latestCommit.message}
+                <div class="row">
+                    <div class="col-md-6 text-muted">
+                        <#if releaseVersion??>
+                            最新版本 ${releaseVersion.number} 发布于 ${releaseVersion.createTime?datetime}
+                        </#if>
                     </div>
-                </#if>
+                    <div class="col-md-6 text-muted text-right">
+                        <#if latestCommit??>
+                        ${latestCommit.author} 于 ${latestCommit.date?datetime} 提交版本 <a
+                                href="/apps/${latestCommit.appId}/commits/${latestCommit.envName}?revision=${latestCommit.revision?c}">#${latestCommit.revision?c}</a>
+                            &emsp;
+                        ${latestCommit.message}
+                        </#if>
+                    </div>
+                </div>
             </div><!-- /.panel-footer -->
         </div><!-- /.panel -->
 

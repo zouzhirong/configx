@@ -314,7 +314,8 @@ CREATE TABLE `release_version` (
 
   `create_time` datetime default '1970-01-01 00:00:00' comment '创建时间',
 
-  KEY(`app_id`,`env_id`)
+  KEY(`app_id`,`env_id`),
+  KEY release_idx(`release_id`)
 ) comment='发行版本表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `session` (

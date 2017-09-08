@@ -118,6 +118,8 @@ public class ConfigController {
         PageRequest pageRequest = new PageRequest(page, size);
         Page<Void, ConfigItemModel> pageResponse = new Page<>(configItemModelList, pageRequest);
 
+        // 最新发布的版本
+        ReleaseVersion releaseVersion = releaseVersionService.getLatestVersion(appId, env.getId());
         // 最新发布的修订号
         long releaseRevision = releaseVersionService.getLatestReleaseRevision(appId, env.getId());
 
@@ -131,6 +133,7 @@ public class ConfigController {
                 addObject("envList", envList).addObject("env", env).
                 addObject("profileList", profileList).addObject("profile", profile).
                 addObject("tagList", tagList).
+                addObject("releaseVersion", releaseVersion).
                 addObject("releaseRevision", releaseRevision).
                 addObject("latestCommit", latestCommit).
                 addObject("page", pageResponse);

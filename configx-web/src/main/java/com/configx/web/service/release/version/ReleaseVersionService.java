@@ -10,11 +10,13 @@ import com.configx.web.service.app.AppService;
 import com.configx.web.service.app.EnvService;
 import com.configx.web.service.build.BuildService;
 import com.configx.web.service.release.ReleaseService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -200,6 +202,39 @@ public class ReleaseVersionService {
     }
 
     /**
+     * 根据发布ID列表，获取发布版本列表
+     *
+     * @param releaseIdList
+     * @return
+     */
+    public List<ReleaseVersion> getVersionsByReleaseIds(List<Long> releaseIdList) {
+        if (CollectionUtils.isEmpty(releaseIdList)) {
+            return Collections.emptyList();
+        }
+        return releaseVersionMapper.getVersionsByReleaseIdList(releaseIdList);
+    }
+
+    /**
+     * 获取发布的信息
+     *
+     * @param releaseList
+     * @return
+     */
+    public List<ReleaseVersion> getVersionsByReleases(List<Release> releaseList) {
+        if (CollectionUtils.isEmpty(releaseList)) {
+            return Collections.emptyList();
+        }
+
+        List<Long> idList = new ArrayList<>();
+        for (Release release : releaseList) {
+            idList.add(release.getId());
+        }
+
+        List<ReleaseVersion> releaseVersionList = getVersionsByReleaseIds(idList);
+        return releaseVersionList;
+    }
+
+    /**
      * 返回指定应用指定环境的最新发布版本
      *
      * @param appId
@@ -208,6 +243,22 @@ public class ReleaseVersionService {
      */
     public ReleaseVersion getLatestVersion(int appId, int envId) {
         return releaseVersionMapper.getLatestVersion(appId, envId);
+    }
+
+    /**
+     * 返回指定应用指定环境的最新发布版本号
+     *
+     * @param appId
+     * @param envId
+     * @return
+     */
+    public long getLatestReleaseVersion(int appId, int envId) {
+        ReleaseVersion latestVersion = getLatestVersion(appId, envId);
+        if (latestVersion == null) {
+            return 0;
+        } else {
+            return latestVersion.getNumber();
+        }
     }
 
     /**

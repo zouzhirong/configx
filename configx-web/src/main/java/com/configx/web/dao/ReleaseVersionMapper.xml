@@ -172,8 +172,15 @@
     select * from `release_version` where app_id=#{appId} and env_id=#{envId} and (`number` BETWEEN #{fromVerion} and #{toVersion})
   </select>
 
+  <select id="getVersionsByReleaseIdList" resultMap="BaseResultMap">
+    select * from `release_version` where release_id IN
+    <foreach item="itemId" index="index" collection="list" open="(" separator="," close=")">
+      #{itemId}
+    </foreach>
+  </select>
+
   <select id="getLatestVersion" resultMap="BaseResultMap">
-    select * from `release_version` where app_id=#{appId} and env_id=#{envId} order by number desc limit 1
+    select * from `release_version` where app_id=#{appId} and env_id=#{envId} order by `number` desc limit 1
   </select>
 
 </mapper>

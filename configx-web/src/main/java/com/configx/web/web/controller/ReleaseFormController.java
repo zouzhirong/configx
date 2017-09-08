@@ -14,6 +14,7 @@ import com.configx.web.service.privilege.PrivilegeService;
 import com.configx.web.service.release.ReleaseService;
 import com.configx.web.service.release.form.ReleaseFormSearchService;
 import com.configx.web.service.release.form.ReleaseFormService;
+import com.configx.web.service.release.version.ReleaseVersionService;
 import com.configx.web.service.user.UserContext;
 import com.configx.web.web.dto.ReleaseFormDto;
 import com.configx.web.web.dto.ReleaseFormListResponse;
@@ -55,6 +56,9 @@ public class ReleaseFormController {
 
     @Autowired
     private ReleaseService releaseService;
+
+    @Autowired
+    private ReleaseVersionService releaseVersionService;
 
     @Autowired
     private ReleaseFormSearchService releaseFormSearchService;
@@ -106,7 +110,8 @@ public class ReleaseFormController {
 
         List<ReleaseForm> releaseFormList = releaseFormSearchService.search(form);
         List<Release> releaseList = releaseService.getReleaseList(releaseFormList);
-        List<ReleaseFormDto> releaseFormDtoList = new ReleaseFormListResponse(releaseFormList, releaseList).getReleaseFormDtoList();
+        List<ReleaseVersion> releaseVersionList = releaseVersionService.getVersionsByReleases(releaseList);
+        List<ReleaseFormDto> releaseFormDtoList = new ReleaseFormListResponse(releaseFormList, releaseList, releaseVersionList).getReleaseFormDtoList();
 
         PageRequest pageRequest = new PageRequest(page, size);
         Page<Void, ReleaseFormDto> pageResponse = new Page<>(releaseFormDtoList, pageRequest);
