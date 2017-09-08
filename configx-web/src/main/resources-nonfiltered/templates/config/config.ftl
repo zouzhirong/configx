@@ -68,7 +68,6 @@
                                         <option value="${profile.id}"
                                                 <#if ((form.profileId)!0) == profile.id>selected</#if>>
                                         ${MessageUtils.getMessage("app.profile.name."+profile.name, profile.name)}
-                                            -${profile.order}
                                         </option>
                                     </#list>
                                 </optgroup>
