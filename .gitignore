@@ -27,3 +27,5 @@ hs_err_pid*
 out
 gen
 /configx-web/src/main/resources/configx.properties
+
+/docs/build/
