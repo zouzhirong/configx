@@ -84,5 +84,5 @@ ConfigX Client根据Spring框架的Environment和PropertySource从ConfigX Sever�
 
 config-web demo： [http://47.94.241.50](http://47.94.241.50)
 
-参考文档： [http://configx.readthedocs.io](http://configx.readthedocs.io)
+参考文档： [http://configx.readthedocs.io/](http://configx.readthedocs.io/)
 
