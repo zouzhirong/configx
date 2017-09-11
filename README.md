@@ -86,3 +86,7 @@ config-web demo： [http://47.94.241.50](http://47.94.241.50)
 
 参考文档： [http://configx.readthedocs.io/](http://configx.readthedocs.io/)
 
+QQ技术支持群：242310272
+
+钉钉技术支持群：11790023
+
