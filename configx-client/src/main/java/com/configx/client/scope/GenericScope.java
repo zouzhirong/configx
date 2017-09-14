@@ -114,7 +114,7 @@ public class GenericScope implements Scope, BeanFactoryPostProcessor, Disposable
         }
     }
 
-    protected void destroy(String name) {
+    public void destroy(String name) {
         BeanLifecycleWrapper wrapper = this.cache.remove(name);
         if (wrapper != null) {
             wrapper.destroy();
