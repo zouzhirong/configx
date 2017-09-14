@@ -6,14 +6,13 @@ package com.configx.client.env;
 
 import com.configx.client.item.locator.ConfigClientProperties;
 import com.google.common.collect.MapMaker;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 配置版本管理
@@ -23,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class ConfigVersionManager {
 
     private static final Log versionLogger = LogFactory.getLog("com.configx.client.version");
-    private static final Log threadLogger = LogFactory.getLog("com.configx.client.version.thread");
+    private static final Log threadLogger = LogFactory.getLog("com.configx.client.thread");
 
     /**
      * 最新版本号
@@ -43,7 +42,7 @@ public class ConfigVersionManager {
     /**
      * 当前线程使用的配置版本号
      */
-    private static final ThreadLocal<Long> threadCurrentVersion = new ThreadLocal<>();
+    private static final ThreadLocal<Long> versionHolder = new ThreadLocal<>();
 
     /**
      * 返回最新版本号
@@ -80,6 +79,15 @@ public class ConfigVersionManager {
     }
 
     /**
+     * 返回版本号列表
+     *
+     * @return
+     */
+    public static List<Long> getVersions() {
+        return new ArrayList<>(versions);
+    }
+
+    /**
      * 返回上一个版本号
      *
      * @param version
@@ -99,13 +107,22 @@ public class ConfigVersionManager {
         return 0;
     }
 
+    public static Map<Thread, Long> getThreadVersionMap() {
+        return threadVersionMap;
+    }
+
     /**
-     * 初始化线程的配置版本号
+     * 返回所有线程正在使用的所有的版本号
      *
      * @return
      */
-    private static long initThreadVersion() {
-        return getHeadVersion();
+    public static Set<Long> getThreadVersions() {
+        Collection<Long> threadVersions = threadVersionMap.values();
+        if (CollectionUtils.isEmpty(threadVersions)) {
+            return Collections.emptySet();
+        } else {
+            return new HashSet<>(threadVersions);
+        }
     }
 
     /**
@@ -113,23 +130,15 @@ public class ConfigVersionManager {
      *
      * @return
      */
-    public static ThreadLocalValue<Long> getCurrentVersion() {
-        boolean initialized = false;
-        Long version = threadCurrentVersion.get();
-        if (version == null) {
-            initialized = true;
-            version = initThreadVersion();
-            setCurrentVersion(version);
-        }
+    public static Long getCurrentVersion() {
+        Long version = versionHolder.get();
 
         Thread t = Thread.currentThread();
 
         threadLogger.debug("Thread get current version, thread=" + t + " version=" + version
                 + " headVersion=" + headVersion);
 
-        debugThreadVersionInfo();
-
-        return new ThreadLocalValue<>(version, initialized);
+        return version;
     }
 
     /**
@@ -140,8 +149,9 @@ public class ConfigVersionManager {
     public static void setCurrentVersion(Long version) {
         if (version == null) {
             clearCurrentVersion();
+
         } else {
-            threadCurrentVersion.set(version);
+            versionHolder.set(version);
 
             Thread t = Thread.currentThread();
             Long previousVersion = threadVersionMap.put(t, version); // previousVersion可能为null
@@ -155,37 +165,14 @@ public class ConfigVersionManager {
      * 清除线程当前的配置版本号
      */
     public static void clearCurrentVersion() {
-        Long version = threadCurrentVersion.get();
-        threadCurrentVersion.remove();
+        Long version = versionHolder.get();
+        versionHolder.remove();
 
         Thread t = Thread.currentThread();
         threadVersionMap.remove(t);
 
         threadLogger.debug("Thread clear current version, thread=" + t + " version=" + version
                 + " headVersion=" + headVersion);
-
-    }
-
-    private static long lastDebugThreadTime = 0;
-
-    /**
-     * 打印所有线程使用的版本信息
-     */
-    private static void debugThreadVersionInfo() {
-        if (threadLogger.isDebugEnabled() && (System.currentTimeMillis() - lastDebugThreadTime) > TimeUnit.SECONDS.toMillis(5)) {
-            lastDebugThreadTime = System.currentTimeMillis();
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("\n=========================\n");
-            sb.append("Thread-Version Report:\n");
-            sb.append("\tHeadVersion " + headVersion + "\n");
-            sb.append("=========================\n");
-            for (Map.Entry<Thread, Long> threadVersion : threadVersionMap.entrySet()) {
-                sb.append("\tThread " + threadVersion.getKey().getName() + " version " + threadVersion.getValue() + "\n");
-            }
-            threadLogger.debug(sb.toString());
-        }
-
     }
 
     /**
@@ -196,48 +183,49 @@ public class ConfigVersionManager {
      * @return
      */
     public static <T> T doWithVersion(VersionCallback<T> callback) {
-        ThreadLocalValue<Long> threadLocalValue = ConfigVersionManager.getCurrentVersion();
-        long currentVersion = threadLocalValue.getValue();
+        boolean initialized = false;
+        Long version = getCurrentVersion();
+        if (version == null) {
+            initialized = true;
+            version = getHeadVersion();
+            setCurrentVersion(version);
+        }
+
+        Thread t = Thread.currentThread();
+
+        threadLogger.debug("Thread doWithVersion, thread=" + t + " version=" + version
+                + " initialized=" + initialized + " headVersion=" + headVersion);
 
         try {
-            return (T) callback.doWithVersion(currentVersion);
+            return callback.doWithVersion(version);
         } finally {
-            if (threadLocalValue.isInitialized()) {
-                if (!ConfigClientProperties.isMvccEnabled()) {
+            // 未开启mvcc，则每次使用完后自动清理线程中的版本信息
+            // 开启mvcc后，需要用户在“事务”结束后手动清除线程中的版本信息
+            if (!ConfigClientProperties.isMvccEnabled()) {
+                if (initialized) {
                     ConfigVersionManager.clearCurrentVersion();
+                    threadLogger.debug("Thread doWithVersion clear version, thread=" + t + " version=" + version
+                            + " initialized=" + initialized + " headVersion=" + headVersion);
                 }
             }
         }
     }
 
     /**
-     * 从ThreadLocal中获取的值信息
+     * 基于版本执行逻辑
      *
+     * @param version
+     * @param callback
      * @param <T>
+     * @return
      */
-    static class ThreadLocalValue<T> {
-
-        /**
-         * 从ThreadLocal中获取的值
-         */
-        private T value;
-
-        /**
-         * 是否刚初始化的值，否则是以前已经设置的值
-         */
-        private boolean initialized;
-
-        public ThreadLocalValue(T value, boolean initialized) {
-            this.value = value;
-            this.initialized = initialized;
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public boolean isInitialized() {
-            return initialized;
+    public static <T> T doWithVersion(long version, VersionCallback<T> callback) {
+        Long previousVersion = versionHolder.get();
+        setCurrentVersion(version);
+        try {
+            return callback.doWithVersion(version);
+        } finally {
+            setCurrentVersion(previousVersion);
         }
     }
 
@@ -246,7 +234,7 @@ public class ConfigVersionManager {
      *
      * @param <T>
      */
-    public static interface VersionCallback<T> {
+    public interface VersionCallback<T> {
         T doWithVersion(long version);
     }
 
