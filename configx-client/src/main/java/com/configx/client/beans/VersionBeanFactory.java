@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -18,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class VersionBeanFactory {
 
-    private static final Log logger = LogFactory.getLog("com.configx.client.versionbean.factory");
+    private static final Log logger = LogFactory.getLog("com.configx.client.beans");
 
     /**
      * Map between version beans: version--> Set of beans
@@ -28,9 +29,16 @@ public class VersionBeanFactory {
     /**
      * clear all version beans
      */
-    public void clear() {
+    public Collection<Object> clear() {
+        List<Object> beans = new ArrayList<>();
+        for (VersionBeans versionBeans : versionBeansMap.values()) {
+            if (versionBeans.getBeans() != null) {
+                beans.addAll(versionBeans.getBeans());
+            }
+        }
         versionBeansMap.clear();
         logger.info("VersionBeanFactory clear all version beans, version");
+        return beans;
     }
 
     /**
@@ -45,6 +53,16 @@ public class VersionBeanFactory {
         logger.info("VersionBeanFactory clear version beans, version=" + version);
 
         return values;
+    }
+
+    /**
+     * return the beans of specified version
+     *
+     * @param version
+     * @return
+     */
+    public VersionBeans getVersionBeans(long version) {
+        return versionBeansMap.get(version);
     }
 
     /**

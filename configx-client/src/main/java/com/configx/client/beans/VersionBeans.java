@@ -39,6 +39,16 @@ public class VersionBeans {
     }
 
     /**
+     * 返回bean的VersionBean信息
+     *
+     * @param beanName
+     * @return
+     */
+    public VersionBean getVersionBean(String beanName) {
+        return beansMap.get(beanName);
+    }
+
+    /**
      * 返回Bean名称列表
      *
      * @return
