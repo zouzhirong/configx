@@ -15,7 +15,8 @@
     <modules>
         <module>configx-web</module>
         <module>configx-client</module>
-        <module>configx-demo</module>
+        <module>configx-demo-spring</module>
+        <module>configx-demo-springboot</module>
     </modules>
 
     <licenses>

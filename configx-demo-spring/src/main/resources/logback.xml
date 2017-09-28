@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="true" scan="true" scanPeriod="10 seconds">
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder charset="UTF-8">
+            <pattern>%n[%level]-%date-%logger%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="warn">
+        <appender-ref ref="console"/>
+    </root>
+    <logger name="com.configx.client" additivity="false" level="info">
+        <appender-ref ref="console"/>
+    </logger>
+
+</configuration>

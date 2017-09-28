@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:configx="http://www.configx.com/schema/configx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.configx.com/schema/configx
+       http://www.configx.com/schema/configx/configx.xsd">
+
+    <!-- 开启配置管理服务 -->
+    <configx:config/>
+
+    <!-- 开启配置管理的jmx管理 -->
+    <configx:jmx/>
+
+    <!-- 定义一个简单的属性注入的bean，scope为version-refresh，当属性变化时，会重新创建bean -->
+    <bean name="configProperties" class="com.configx.demo.property.ConfigProperties">
+        <property name="timeout" value="${timeout}"/>
+        <configx:version-refresh/>
+        <aop:scoped-proxy proxy-target-class="true"/>
+    </bean>
+
+    <bean name="configPropertiesExample" class="com.configx.demo.property.ConfigPropertiesExample">
+        <property name="configProperties" ref="configProperties"/>
+    </bean>
+
+</beans>

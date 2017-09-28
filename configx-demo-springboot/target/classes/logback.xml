@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- 自定义logger -->
+    <logger name="com.configx.client" level="INFO"/>
+
+
+</configuration>

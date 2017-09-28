@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:configx="http://www.configx.com/schema/configx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.configx.com/schema/configx
+       http://www.configx.com/schema/configx/configx.xsd">
+
+    <bean class="com.configx.client.converter.ConfigBeanConverterConfigurer">
+        <property name="converters">
+            <list>
+                <bean class="com.configx.demo.bean.XmlConfigConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="students" class="com.configx.demo.bean.Students">
+        <configx:bean propertyName="students.xml" converter=""/>
+        <configx:version-refresh/>
+        <aop:scoped-proxy proxy-target-class="true"/>
+    </bean>
+
+    <bean name="configBeanExample" class="com.configx.demo.bean.ConfigBeanExample">
+        <property name="students" ref="students" />
+    </bean>
+
+</beans>
