@@ -12,7 +12,7 @@ import org.springframework.core.env.PropertyResolver;
  * <p>
  * Created by zouzhirong on 2017/9/13.
  *
- * @see {@link com.configx.client.annotation.ConfigBean}
+ * @see com.configx.client.annotation.ConfigBean
  */
 public class ConfigBeanFactory {
 

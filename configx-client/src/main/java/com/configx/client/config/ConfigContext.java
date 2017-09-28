@@ -482,7 +482,6 @@ public class ConfigContext implements BeanDefinitionRegistryPostProcessor,
      * 升级版本号，新版本号可见
      *
      * @param version
-     * @return
      */
     protected void exposeVersion(long version) {
         VersionContextHolder.setVisibleVersion(version);
