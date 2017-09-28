@@ -4,17 +4,13 @@
  */
 package com.configx.client.annotation;
 
-import com.configx.client.item.converter.ConfigConverter;
+import com.configx.client.converter.ConfigBeanConverter;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
 
 /**
- * 标记一个Bean是配置Bean
- *
- * @author zouzhirong
- * @version 1.0
- * @since 1.0
+ * 配置Bean注解，标记这个bean由属性转换而来。
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -29,6 +25,6 @@ public @interface ConfigBean {
     /**
      * 配置项的转换器
      */
-    Class<? extends ConfigConverter> converter() default ConfigConverter.class;
+    Class<? extends ConfigBeanConverter> converter() default ConfigBeanConverter.class;
 
 }

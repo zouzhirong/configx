@@ -8,12 +8,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.context.*;
+import org.springframework.context.HierarchicalMessageSource;
+import org.springframework.context.MessageSource;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 
 /**
  * 基于配置服务的MessageSource
@@ -22,38 +22,61 @@ import org.springframework.core.env.Environment;
  */
 
 public class ConfigMessageSourceConfigurer implements BeanDefinitionRegistryPostProcessor,
-        BeanFactoryAware,
-        ApplicationContextAware,
-        EnvironmentAware {
+        BeanFactoryAware {
+
+    public static final String CONFIG_MESSAGE_SOURCE_BEAN_NAME = ConfigMessageSource.class.getName();
+
+    public static final String MESSAGE_SOURCE_POST_PROCESSOR_BEAN_NAME = MessageSourceConfigItemPostProcessor.class.getName();
 
     private ConfigurableListableBeanFactory beanFactory;
 
-    private ApplicationContext applicationContext;
-
-    private ConfigurableEnvironment environment;
-
+    private boolean fallbackToSystemLocale = false;
+    private String[] basenames = null;
 
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public void setFallbackToSystemLocale(boolean fallbackToSystemLocale) {
+        this.fallbackToSystemLocale = fallbackToSystemLocale;
     }
 
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = (ConfigurableEnvironment) environment;
+    public void setBasenames(String[] basenames) {
+        this.basenames = basenames;
     }
 
-    @Override
-    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+    /**
+     * 注册beans
+     *
+     * @param registry
+     */
+    private void registerBeanDefinitions(BeanDefinitionRegistry registry) {
+        if (!registry.containsBeanDefinition(CONFIG_MESSAGE_SOURCE_BEAN_NAME)) {
+            BeanDefinitionBuilder meta = BeanDefinitionBuilder.genericBeanDefinition(ConfigMessageSource.class);
+            meta.addPropertyValue("fallbackToSystemLocale", fallbackToSystemLocale);
+            meta.addPropertyValue("basenames", basenames);
+            registry.registerBeanDefinition(CONFIG_MESSAGE_SOURCE_BEAN_NAME, meta.getBeanDefinition());
+        }
+
+        if (!registry.containsBeanDefinition(MESSAGE_SOURCE_POST_PROCESSOR_BEAN_NAME)) {
+            BeanDefinitionBuilder meta = BeanDefinitionBuilder.genericBeanDefinition(MessageSourceConfigItemPostProcessor.class);
+            meta.addPropertyReference("configMessageSource", CONFIG_MESSAGE_SOURCE_BEAN_NAME);
+            registry.registerBeanDefinition(MESSAGE_SOURCE_POST_PROCESSOR_BEAN_NAME, meta.getBeanDefinition());
+        }
+    }
+
+    /**
+     * 配置基于配置的MessageSource
+     */
+    private void configureMessageSource() {
         // MessageSource bean name
         String messageSourceBeanName = AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME;
 
-        // 配置服务的MessageSource
-        HierarchicalMessageSource configMessageSource = new ConfigMessageSource(applicationContext);
+        // Config MessageSource bean name
+        String configMessageSourceBeanName = CONFIG_MESSAGE_SOURCE_BEAN_NAME;
+
+        // 基于配置服务的MessageSource
+        ConfigMessageSource configMessageSource = beanFactory.getBean(configMessageSourceBeanName, ConfigMessageSource.class);
 
         // 如果已经存在MessageSource bean,则将ConfigMessageSource设置为messageSource的parent,将messageSource原来的parent设置为ConfigMessageSource的parent
         if (beanFactory.containsLocalBean(messageSourceBeanName)) {
@@ -71,7 +94,12 @@ public class ConfigMessageSourceConfigurer implements BeanDefinitionRegistryPost
     }
 
     @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        registerBeanDefinitions(registry);
+    }
 
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        configureMessageSource();
     }
 }

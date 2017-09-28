@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xsd:schema xmlns="http://www.configx.com/schema/configx"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            targetNamespace="http://www.configx.com/schema/configx"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.springframework.org/schema/beans"/>
+
+    <xsd:annotation>
+        <xsd:documentation><![CDATA[
+	Defines the configuration elements for the Spring Framework's ConfigX support.
+		]]></xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:element name="config">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[
+	            configx config
+			]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="bean">
+        <xsd:complexType>
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[
+                    configx bean
+				]]></xsd:documentation>
+            </xsd:annotation>
+            <xsd:attribute name="propertyName" type="xsd:string" default="">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+	                    config property name
+					]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="class" type="xsd:string" default="">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+                        bean class
+					]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="proxy-target-class" type="xsd:boolean" default="false">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+                        proxy-target-class
+					]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="message-source">
+        <xsd:complexType>
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[
+                    configx message source
+				]]></xsd:documentation>
+            </xsd:annotation>
+            <xsd:attribute name="fallbackToSystemLocale" type="xsd:boolean" default="true">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+	                    fallbackToSystemLocale
+					]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="basenames" type="xsd:string" default="">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+                        basenames
+					]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="jmx">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[
+                    configx jmx
+				]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="version-refresh">
+        <xsd:complexType>
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[
+                    bean refresh scope
+				]]></xsd:documentation>
+            </xsd:annotation>
+            <xsd:attribute name="dependsOn" type="xsd:string" default="">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+	                    Refresh bean depends on property names
+					]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

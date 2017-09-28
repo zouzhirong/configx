@@ -5,7 +5,7 @@
 package com.configx.client.env;
 
 import com.configx.client.item.ConfigItemList;
-import com.configx.client.item.listener.ConfigItemChangeEvent;
+import com.configx.client.listener.ConfigItemChangeEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertySource;
@@ -62,10 +62,6 @@ public abstract class MultiVersionPropertySourceFactory {
 
         MultiVersionPropertySource multiVersionPropertySource = getMultiVersionPropertySource(environment);
         multiVersionPropertySource.addPropertySource(versionPropertySource);
-
-        // 发布事件
-        applicationContext.publishEvent(new ConfigItemChangeEvent(multiVersionPropertySource, versionPropertySource));
-
     }
 
     /**

@@ -22,6 +22,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -50,6 +51,8 @@ public class GenericScope implements Scope, BeanFactoryPostProcessor, Disposable
     private String id;
 
     private BeanLifecycleDecorator<?> lifecycle;
+
+    private Map<String, Exception> errors = new ConcurrentHashMap<>();
 
     /**
      * Manual override for the serialization id that will be used to identify the bean
@@ -98,6 +101,15 @@ public class GenericScope implements Scope, BeanFactoryPostProcessor, Disposable
         this.lifecycle = lifecycle;
     }
 
+    /**
+     * A map of bean name to errors when instantiating the bean.
+     *
+     * @return the errors accumulated since the latest destroy
+     */
+    public Map<String, Exception> getErrors() {
+        return this.errors;
+    }
+
     @Override
     public void destroy() {
         List<Throwable> errors = new ArrayList<Throwable>();
@@ -112,14 +124,25 @@ public class GenericScope implements Scope, BeanFactoryPostProcessor, Disposable
         if (!errors.isEmpty()) {
             throw wrapIfNecessary(errors.get(0));
         }
+        this.errors.clear();
     }
 
-    public void destroy(String name) {
+    /**
+     * Destroy the named bean (i.e. flush it from the cache by default).
+     *
+     * @param name the bean name to flush
+     * @return true if the bean was already cached, false otherwise
+     */
+    public boolean destroy(String name) {
         BeanLifecycleWrapper wrapper = this.cache.remove(name);
         if (wrapper != null) {
             wrapper.destroy();
+            this.errors.remove(name);
+            return true;
         }
+        return false;
     }
+
 
     @Override
     public Object get(String name, ObjectFactory<?> objectFactory) {
@@ -128,7 +151,12 @@ public class GenericScope implements Scope, BeanFactoryPostProcessor, Disposable
         }
         BeanLifecycleWrapper value = this.cache.put(name, new BeanLifecycleWrapper(name,
                 objectFactory, this.lifecycle));
-        return value.getBean();
+        try {
+            return value.getBean();
+        } catch (RuntimeException e) {
+            this.errors.put(name, e);
+            throw e;
+        }
     }
 
     @Override
@@ -199,8 +227,10 @@ public class GenericScope implements Scope, BeanFactoryPostProcessor, Disposable
 
             String id = this.id;
             if (id == null) {
-                String names = Arrays.asList(beanFactory.getBeanDefinitionNames())
-                        .toString();
+                List<String> list = new ArrayList<>(
+                        Arrays.asList(beanFactory.getBeanDefinitionNames()));
+                Collections.sort(list);
+                String names = list.toString();
                 logger.debug("Generating bean factory id from names: " + names);
                 id = UUID.nameUUIDFromBytes(names.getBytes()).toString();
             }
@@ -223,6 +253,10 @@ public class GenericScope implements Scope, BeanFactoryPostProcessor, Disposable
             throw (Error) throwable;
         }
         return new IllegalStateException(throwable);
+    }
+
+    protected String getName() {
+        return this.name;
     }
 
     private static class BeanLifecycleWrapperCache {
@@ -261,7 +295,7 @@ public class GenericScope implements Scope, BeanFactoryPostProcessor, Disposable
      * is registered for it. Also decorates the bean to optionally guard it from
      * concurrent access (for instance).
      *
-     * @author Dave Syer
+     * @author zouzhirong
      */
     private static class BeanLifecycleWrapper {
 
@@ -291,8 +325,12 @@ public class GenericScope implements Scope, BeanFactoryPostProcessor, Disposable
         @SuppressWarnings("unchecked")
         public Object getBean() {
             if (this.bean == null) {
-                this.bean = this.lifecycle.decorateBean(this.objectFactory.getObject(),
-                        this.context);
+                synchronized (this.name) {
+                    if (this.bean == null) {
+                        this.bean = this.lifecycle.decorateBean(
+                                this.objectFactory.getObject(), this.context);
+                    }
+                }
             }
             return this.bean;
         }

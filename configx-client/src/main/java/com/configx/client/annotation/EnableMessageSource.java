@@ -1,16 +1,20 @@
 package com.configx.client.annotation;
 
-import com.configx.client.messagesource.ConfigMessageSourcePostProcessorRegistrar;
+import com.configx.client.messagesource.EnableMessageSourceImportSelector;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
 
+/**
+ * 开启配置管理对MessageSource支持
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({
-        ConfigMessageSourcePostProcessorRegistrar.class // 注册MessageSource处理相关bean
-})
+@Import(EnableMessageSourceImportSelector.class)
 public @interface EnableMessageSource {
 
+    boolean fallbackToSystemLocale() default true;
+
+    String[] basenames() default {};
 }

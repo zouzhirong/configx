@@ -4,6 +4,7 @@
  */
 package com.configx.client.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.aop.framework.Advised;
 
 /**
@@ -14,6 +15,23 @@ import org.springframework.aop.framework.Advised;
  * @since 1.0
  */
 public class ProxyUtils {
+
+    private static final String TARGET_NAME_PREFIX = "scopedTarget.";
+
+    /**
+     * 获取bean name的原始名称，如果是代理的bean，返回原始bean name。
+     *
+     * @param beanName
+     * @return
+     */
+    public static String getOriginalBeanName(String beanName) {
+        if (beanName.startsWith(TARGET_NAME_PREFIX)) {
+            return StringUtils.removeStart(beanName, TARGET_NAME_PREFIX);
+        } else {
+            return beanName;
+        }
+    }
+
     /**
      * 获取经过CGLIB包装过的Target Bean
      *

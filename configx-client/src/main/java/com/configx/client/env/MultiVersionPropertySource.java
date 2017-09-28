@@ -4,6 +4,8 @@
  */
 package com.configx.client.env;
 
+import com.configx.client.version.ConfigVersionManager;
+import com.configx.client.version.VersionExecutor;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.StringUtils;
@@ -41,7 +43,7 @@ public class MultiVersionPropertySource extends EnumerablePropertySource<Object>
 
     @Override
     public Object getProperty(String name) {
-        return ConfigVersionManager.doWithVersion(version -> {
+        return VersionExecutor.doWithCurrentVersion(version -> {
             VersionPropertySource<?> propertySource = null;
             for (int index = this.propertySources.size() - 1; index >= 0; index--) {
                 propertySource = this.propertySources.get(index);
@@ -60,7 +62,7 @@ public class MultiVersionPropertySource extends EnumerablePropertySource<Object>
 
     @Override
     public boolean containsProperty(String name) {
-        return ConfigVersionManager.doWithVersion(version -> {
+        return VersionExecutor.doWithCurrentVersion(version -> {
             VersionPropertySource<?> propertySource = null;
             for (int index = this.propertySources.size() - 1; index >= 0; index--) {
                 propertySource = this.propertySources.get(index);
@@ -78,7 +80,7 @@ public class MultiVersionPropertySource extends EnumerablePropertySource<Object>
 
     @Override
     public String[] getPropertyNames() {
-        return ConfigVersionManager.doWithVersion(version -> {
+        return VersionExecutor.doWithCurrentVersion(version -> {
             Set<String> names = new LinkedHashSet<String>();
 
             VersionPropertySource<?> propertySource = null;
@@ -100,14 +102,7 @@ public class MultiVersionPropertySource extends EnumerablePropertySource<Object>
      * @param versionPropertySource the version PropertySource to add
      */
     public void addPropertySource(VersionPropertySource<?> versionPropertySource) {
-
-        // TODO
-        // Pre refresh/instantiate beans which config changed
-        // @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory.preInstantiateSingletons()
-
-        if (ConfigVersionManager.addVersion(versionPropertySource.getVersion())) {
-            this.propertySources.add(versionPropertySource);
-        }
+        this.propertySources.add(versionPropertySource);
     }
 
     /**
