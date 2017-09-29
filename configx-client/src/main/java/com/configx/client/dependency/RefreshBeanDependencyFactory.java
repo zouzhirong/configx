@@ -139,7 +139,6 @@ public class RefreshBeanDependencyFactory implements MergedBeanDefinitionPostPro
 
     @Override
     public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
-        System.out.println();
     }
 
     @Override
