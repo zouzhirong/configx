@@ -25,7 +25,7 @@ public class RedisExample implements InitializingBean {
 
                     JedisConnectionFactory connectionFactory = ((JedisConnectionFactory) template.getConnectionFactory());
 
-                    System.out.println("Redis value=" + value + ", host=" + connectionFactory.getHostName() + ", port=" + connectionFactory.getPort());
+                    System.out.println("Redis: value=" + value + ", host=" + connectionFactory.getHostName() + ", port=" + connectionFactory.getPort());
 
                     TimeUnit.SECONDS.sleep(5);
                 } catch (Exception e) {

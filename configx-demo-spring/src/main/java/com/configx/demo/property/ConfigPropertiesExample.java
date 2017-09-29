@@ -22,7 +22,7 @@ public class ConfigPropertiesExample implements InitializingBean {
         new Thread(() -> {
             while (true) {
                 try {
-                    System.out.println("ConfigProperties: \n" + JSON.toJSONString(configProperties, true));
+                    System.out.println("ConfigProperties: " + JSON.toJSONString(configProperties));
                     TimeUnit.SECONDS.sleep(5);
                 } catch (Exception e) {
                     e.printStackTrace();

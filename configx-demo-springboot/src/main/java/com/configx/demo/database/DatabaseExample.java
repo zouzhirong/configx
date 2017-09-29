@@ -1,5 +1,6 @@
 package com.configx.demo.database;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,9 +24,16 @@ public class DatabaseExample implements InitializingBean {
         new Thread(() -> {
             while (true) {
                 try {
-                    int value = jdbcTemplate.queryForObject("select 1", int.class);
+                    int value = 0;
+                    try {
+                        value = jdbcTemplate.queryForObject("select 1", int.class);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                    System.out.println("Database: value=" + value);
+                    BasicDataSource dataSource = ((BasicDataSource) jdbcTemplate.getDataSource());
+
+                    System.out.println("Database: value=" + value + ", url=" + dataSource.getUrl());
 
                     TimeUnit.SECONDS.sleep(5);
                 } catch (Exception e) {

@@ -1,7 +1,6 @@
 package com.configx.demo.property;
 
 import com.alibaba.fastjson.JSON;
-import com.configx.client.annotation.EnableConfigService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * 使用配置管理系统来管理文件，自动将文件映射并注册为Spring Bean
  */
-@EnableConfigService // 启动配置管理
 @Service
 public class ConfigPropertiesExample implements InitializingBean {
 
@@ -24,7 +22,7 @@ public class ConfigPropertiesExample implements InitializingBean {
         new Thread(() -> {
             while (true) {
                 try {
-                    System.out.println("ConfigProperties: \n" + JSON.toJSONString(configProperties, true));
+                    System.out.println("ConfigProperties: " + JSON.toJSONString(configProperties));
                     TimeUnit.SECONDS.sleep(5);
                 } catch (Exception e) {
                     e.printStackTrace();

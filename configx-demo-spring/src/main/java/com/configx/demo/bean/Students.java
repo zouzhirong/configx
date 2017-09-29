@@ -1,13 +1,12 @@
 package com.configx.demo.bean;
 
-import com.configx.client.version.VersionContextHolder;
 import org.simpleframework.xml.ElementList;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.List;
 
-public class Students {
+public class Students implements InitializingBean, DisposableBean {
     @ElementList(inline = true, entry = "student")
     private List<Student> students;
 
@@ -15,14 +14,13 @@ public class Students {
         return students;
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println();
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("Initializing " + this);
     }
 
-    @PreDestroy
+    @Override
     public void destroy() {
-        long version = VersionContextHolder.getCurrentVersion();
-        System.out.println("Students destroy, version=" + version);
+        System.out.println("Destroy " + this);
     }
 }

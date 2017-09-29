@@ -56,7 +56,6 @@ import java.util.concurrent.TimeUnit;
  *    本实例演示的是3所描述的“事务”。
  *
  */
-@EnableConfigService(converters = {XmlConfigConverter.class}) // 启动配置管理，并注册XmlConfigConverter
 @Service
 public class MVCCExample implements InitializingBean {
 
@@ -100,8 +99,8 @@ public class MVCCExample implements InitializingBean {
                     e.printStackTrace();
                 }
             }
-            System.out.println("students: \n" + JSON.toJSONString(students.getStudents(), true));
-            System.out.println("ConfigProperties: \n" + JSON.toJSONString(configProperties, true));
+            System.out.println("Students: " + JSON.toJSONString(students.getStudents()));
+            System.out.println("ConfigProperties: " + JSON.toJSONString(configProperties));
         }
         System.out.println("=======================================================================================");
     }

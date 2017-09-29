@@ -20,14 +20,14 @@ public class ConfigBeanExample implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         // 启动一个线程，每5秒打印students信息
         new Thread(() -> {
-//            while (true) {
-            try {
-                System.out.println("students: \n" + JSON.toJSONString(students.getStudents(), true));
-                TimeUnit.SECONDS.sleep(5);
-            } catch (Exception e) {
-                e.printStackTrace();
+            while (true) {
+                try {
+                    System.out.println("Students: " + JSON.toJSONString(students.getStudents()));
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-//            }
         }).start();
     }
 }

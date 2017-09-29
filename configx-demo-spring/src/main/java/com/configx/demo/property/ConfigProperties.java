@@ -1,15 +1,13 @@
 package com.configx.demo.property;
 
-import com.configx.client.version.VersionContextHolder;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 /**
  * Created by zouzhirong on 2017/3/15.
  */
-public class ConfigProperties {
+public class ConfigProperties implements InitializingBean, DisposableBean {
 
     @Value("${timeout}")
     private long timeout;
@@ -18,14 +16,17 @@ public class ConfigProperties {
         this.timeout = timeout;
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println();
+    public long getTimeout() {
+        return timeout;
     }
 
-    @PreDestroy
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("Initializing " + this);
+    }
+
+    @Override
     public void destroy() {
-        long version = VersionContextHolder.getCurrentVersion();
-        System.out.println("ConfigProperties destroy, version=" + version);
+        System.out.println("Destroy " + this);
     }
 }

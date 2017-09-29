@@ -2,7 +2,6 @@ package com.configx.demo.bean;
 
 import com.configx.client.annotation.ConfigBean;
 import com.configx.client.annotation.VersionRefreshScope;
-import com.configx.client.version.VersionContextHolder;
 import org.simpleframework.xml.ElementList;
 
 import javax.annotation.PostConstruct;
@@ -22,12 +21,11 @@ public class Students {
 
     @PostConstruct
     public void init() {
-        System.out.println();
+        System.out.println("Initializing " + this);
     }
 
     @PreDestroy
     public void destroy() {
-        long version = VersionContextHolder.getCurrentVersion();
-        System.out.println("Students destroy, version=" + version);
+        System.out.println("Destroy " + this);
     }
 }

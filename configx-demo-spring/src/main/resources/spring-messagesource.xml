@@ -8,7 +8,7 @@
        http://www.configx.com/schema/configx/configx.xsd">
 
     <!-- 开启配置管理对message source的支持 -->
-    <configx:message-source fallbackToSystemLocale="false" basenames="messages"/>
+    <configx:message-source fallbackToSystemLocale="false" basenames=""/>
 
     <bean name="messageSourceExample" class="com.configx.demo.message.MessageSourceExample"/>
 

@@ -1,7 +1,6 @@
 package com.configx.demo.property;
 
 import com.configx.client.annotation.VersionRefreshScope;
-import com.configx.client.version.VersionContextHolder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +23,17 @@ public class ConfigProperties {
         this.timeout = timeout;
     }
 
+    public long getTimeout() {
+        return timeout;
+    }
+
     @PostConstruct
     public void init() {
-        System.out.println();
+        System.out.println("Initializing " + this);
     }
 
     @PreDestroy
     public void destroy() {
-        long version = VersionContextHolder.getCurrentVersion();
-        System.out.println("ConfigProperties destroy, version=" + version);
+        System.out.println("Destroy " + this);
     }
 }

@@ -1,6 +1,5 @@
 package com.configx.demo.message;
 
-import com.configx.client.annotation.EnableMessageSource;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -31,7 +30,7 @@ public class MessageSourceExample implements ApplicationContextAware, Initializi
                 try {
                     String project = context.getMessage("project.name", null, Locale.getDefault());
                     String author = context.getMessage("author", null, null);
-                    System.out.println("MessageSource project=" + project + ", author=" + author);
+                    System.out.println("MessageSource: project=" + project + ", author=" + author);
                     TimeUnit.SECONDS.sleep(5);
                 } catch (Exception e) {
                     e.printStackTrace();

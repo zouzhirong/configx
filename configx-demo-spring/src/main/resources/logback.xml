@@ -5,7 +5,7 @@
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>
         <encoder charset="UTF-8">
-            <pattern>%n[%level]-%date-%logger%msg%n</pattern>
+            <pattern>%n[%level]-%date-%logger : %msg%n</pattern>
         </encoder>
     </appender>
 
