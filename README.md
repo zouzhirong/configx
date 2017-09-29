@@ -82,7 +82,7 @@ ConfigX Client根据Spring框架的Environment和PropertySource从ConfigX Sever�
     原来Spring应用中的i18n消息文件迁移到配置管理平台后，仍然可以使用MessageSource.getMessage方法来获取国际化消息，应用程序并不需要修改任何代码，原因是CongigX使用了Spring的MessageSource扩展。
 
 
-config-web demo： [http://47.94.241.50](http://47.94.241.50)，用户名和密码都是demo。
+config-web demo： [http://demo.configx.com](http://demo.configx.com)，用户名和密码都是demo。
 
 参考文档： [http://configx.readthedocs.io/](http://configx.readthedocs.io/)
 
