@@ -24,7 +24,7 @@ public class PropertiesFileConfigItemPostProcessor implements ConfigItemPostProc
 
     private static final String SPRING_PROPERTY_SOURCES = "spring.property.sources";
     private static final String DEFAULT_PROPERTY_SOURCES = "application";
-    private static final String DELIMITERS = ",; \t";
+    private static final String DELIMITERS = ",; \t\n";
 
     private static final String XML_SUFFIX = ".xml";
     private PropertiesPersister propertiesPersister = new DefaultPropertiesPersister();
