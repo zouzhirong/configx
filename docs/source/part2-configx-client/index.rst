@@ -8,4 +8,4 @@ ConfigX与Spring无缝集成，支持Spring里面Environment和PropertySource的
     :numbered: 2
 
     client
-    tutorial
+    tutorials/index

@@ -3,19 +3,21 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:configx="http://www.configx.com/schema/configx"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd
        http://www.configx.com/schema/configx
-       http://www.configx.com/schema/configx/configx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.configx.com/schema/configx/configx.xsd">
 
     <!-- 开启配置管理服务 -->
     <configx:config/>
 
-    <!-- 开启配置管理的jmx管理 -->
-    <configx:jmx/>
+    <!-- 定义一个简单的属性注入的bean，scope为version-refresh，当属性变化时，会重新创建bean -->
+    <!-- 由于使用xml定义bean属性时，在bean定义处理阶段，属性占位符已经解析成最终的值，因此属性值修改不会生效，可以使用@Value来注入属性。-->
+    <bean name="testBean" class="com.configx.demo.TestBean">
+        <property name="timeout" value="${timeout}"/>
+    </bean>
 
     <!-- 定义一个简单的属性注入的bean，scope为version-refresh，当属性变化时，会重新创建bean -->
     <!-- 由于使用xml定义bean属性时，在bean定义处理阶段，属性占位符已经解析成最终的值，因此属性值修改不会生效，可以使用@Value来注入属性。-->

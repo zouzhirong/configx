@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Redis样例
+ * 支持热修改Redis地址
+ */
 @Service
 public class RedisExample implements InitializingBean {
 

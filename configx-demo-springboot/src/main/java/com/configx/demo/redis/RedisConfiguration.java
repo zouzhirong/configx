@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 /**
+ * Redis Bean Configuration
  * Created by zouzhirong on 2017/9/25.
  */
 @Configuration

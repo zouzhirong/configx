@@ -3,6 +3,7 @@ package com.configx.demo.redis;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
+ * Redis属性
  * Created by zouzhirong on 2017/9/26.
  */
 public class RedisProperties {
